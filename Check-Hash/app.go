@@ -103,12 +103,12 @@ func detectChange() (bool, error) {
 }
 
 func main() {
-	// var message string = readFile();
-	// hashedMsg := hashFunction(message);
-	// err := saveToJSON(hashedMsg);
-	// if err != nil {
-	// 	log.Fatal(err);
-	// }
+	var message string = readFile();
+	hashedMsg := hashFunction(message);
+	err := saveToJSON(hashedMsg);
+	if err != nil {
+		log.Fatal(err);
+	}
 	isChanged, err := detectChange();
 	if err != nil {
 		fmt.Println(err);
@@ -117,5 +117,5 @@ func main() {
 
 	fmt.Println(isChanged);
 
-    // fmt.Printf("SHA256: %s\n", hashedMsg);
+    fmt.Printf("SHA256: %s\n", hashedMsg);
 }
