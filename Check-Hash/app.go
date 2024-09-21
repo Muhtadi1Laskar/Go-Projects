@@ -9,6 +9,10 @@ import (
 	"strings"
 )
 
+type hashs struct {
+	h []byte
+}
+
 func readFile() string {
 	var builder strings.Builder;
 	file, err := os.Open("files/one-text.txt");
@@ -28,12 +32,14 @@ func readFile() string {
 	return builder.String();
 }
 
-func hashFunction(text string) []byte {
+func hashFunction(text string) hashs {
 	byteMessage := []byte(text);
 	hash := sha512.New();
 	hash.Write(byteMessage);
-
-	return hash.Sum(nil);
+	
+	return hashs {
+		h: hash.Sum(nil),
+	}
 }
 
 func main() {
