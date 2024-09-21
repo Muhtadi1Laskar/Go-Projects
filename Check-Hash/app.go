@@ -28,11 +28,17 @@ func readFile() string {
 	return builder.String();
 }
 
+func hashFunction(text string) []byte {
+	byteMessage := []byte(text);
+	hash := sha512.New();
+	hash.Write(byteMessage);
+
+	return hash.Sum(nil);
+}
+
 func main() {
 	var message string = readFile();
-	byteMessage := []byte(message);
-	hash := sha512.New();
-	hash.Write(byteMessage)
+	hashedMsg := hashFunction(message);
 
-    fmt.Printf("SHA256: %x\n", hash.Sum(nil))
+    fmt.Printf("SHA256: %x\n", hashedMsg);
 }
