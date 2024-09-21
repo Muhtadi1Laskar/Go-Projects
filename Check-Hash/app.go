@@ -93,7 +93,7 @@ func hashFunction(text string) Hash {
 }
 
 func detectChange() (bool, error) {
-	message := readFile();
+	var message string = readFile();
 	hashedMessage := hashFunction(message);
 	previousHash, err := readJsonFile();
 	if err != nil {
