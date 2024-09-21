@@ -1,0 +1,6 @@
+This is a text file
+With a new line
+This is another new line
+THis lines are on the same line    just with extra added space
+
+Look I ma a number23423424234
