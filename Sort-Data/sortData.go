@@ -24,7 +24,7 @@ func readData() ([][]string, error) {
 }
 
 func buildArray(data [][]string) []int {
-	array := []int{};
+	var array []int = []int{};
 	for _, elem := range data {
 		num, _ := strconv.Atoi(elem[0]);
 		array = append(array, num);
