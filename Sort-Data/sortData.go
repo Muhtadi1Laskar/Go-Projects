@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func readData() ([][]string, error) {
+func readCSV() ([][]string, error) {
 	fileName, err := os.Open("data.csv");
 	if err != nil {
 		return nil, err;
@@ -15,12 +15,28 @@ func readData() ([][]string, error) {
 	defer fileName.Close();
 
 	rawData := csv.NewReader(fileName);
-	data, err :=rawData.ReadAll();
+	data, err := rawData.ReadAll();
 	if err != nil {
 		return nil, err;
 	}
 
 	return data, nil
+}
+
+func writeCSV(data [][]string) {
+	fileName, err := os.Create("sorted-data.csv");
+	if err != nil {
+		fmt.Println("Cannot read the CSV file");
+		os.Exit(1);
+	}
+	defer fileName.Close();
+
+	csvWrite:= csv.NewWriter(fileName);
+	if err = csvWrite.WriteAll(data); err != nil {
+		fmt.Println("Cannot read the CSV file");
+		os.Exit(1);
+	}
+	csvWrite.Flush();
 }
 
 func buildArray(data [][]string) []int {
@@ -32,7 +48,17 @@ func buildArray(data [][]string) []int {
 	return array;
 }
 
-func insertionSort(array []int) []int {
+func converToString(data []int) [][]string {
+	array := [][]string{};
+
+	for _, elem := range data {
+		arr := []string{strconv.Itoa(elem)}
+		array = append(array, arr);
+	}
+	return array;
+}
+
+func insertionSort(array []int) [][]string {
 	for i := 0; i < len(array); i++ {
 		var key int = array[i];
 		var j int = i - 1;
@@ -43,18 +69,20 @@ func insertionSort(array []int) []int {
 		}
 		array[j+1] = key;
 	}
-	return array;
+	return converToString(array);
 }
 
 func main() {
-	data, err := readData();
+	data, err := readCSV();
 	if err != nil {
 		fmt.Println(err);
 		os.Exit(1);
 	}
 
 	var array []int = buildArray(data);
-	var sortedArray []int = insertionSort(array);
+	var sortedArray [][]string = insertionSort(array);
+
+	writeCSV(sortedArray);
 
 	fmt.Println(sortedArray);
 }
