@@ -45,7 +45,7 @@ func writeCSV(data [][]string) {
 }
 
 func buildArray(data [][]string) []int {
-	var array []int = []int{};
+	array := make([]int, 0, len(data));
 	for _, elem := range data {
 		num, _ := strconv.Atoi(elem[0]);
 		array = append(array, num);
@@ -54,11 +54,9 @@ func buildArray(data [][]string) []int {
 }
 
 func converToString(data []int) [][]string {
-	array := [][]string{};
-
-	for _, elem := range data {
-		arr := []string{strconv.Itoa(elem)}
-		array = append(array, arr);
+	array := make([][]string, len(data));
+	for i, elem := range data {
+		array[i] = []string{strconv.Itoa(elem)};
 	}
 	return array;
 }
