@@ -36,7 +36,12 @@ func writeCSV(data [][]string) {
 		fmt.Println("Cannot read the CSV file");
 		os.Exit(1);
 	}
+	
 	csvWrite.Flush();
+	if err := csvWrite.Error(); err != nil {
+		fmt.Println("Error flushing CSV writer:", err)
+		os.Exit(1)
+	}
 }
 
 func buildArray(data [][]string) []int {
