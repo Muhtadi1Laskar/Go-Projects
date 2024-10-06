@@ -67,7 +67,7 @@ func isNumber(token string) bool {
 	return err == nil
 }
 
-func evaluateExpression(exp string) int {
+func evaluateExpression(exp string) (int, error) {
 	expression := strings.Fields(exp)
 	stack := NewStack()
 
@@ -78,20 +78,22 @@ func evaluateExpression(exp string) int {
 		} else if token == "+" || token == "-" || token == "/" || token == "*" {
 			itemTwo := stack.Pop()
 			itemOne := stack.Pop()
-			result := calculate(itemOne, itemTwo, token)
+			result, err := calculate(itemOne, itemTwo, token)
+			if err != nil {
+				return 0, err
+			}
 			stack.Push(result)
 		}
 	}
 	result := stack.Log()
 
 	if len(result) > 1 {
-		fmt.Println("invalid expression: insufficient values for operation")
-		return -1
+		return 0, fmt.Errorf("invalid expression: insufficient values for operation")
 	}
-	return result[0]
+	return result[0], nil
 }
 
-func calculate(itemOne int, itemTwo int, operator string) int {
+func calculate(itemOne int, itemTwo int, operator string) (int, error) {
 	var result int
 
 	switch operator {
@@ -100,17 +102,20 @@ func calculate(itemOne int, itemTwo int, operator string) int {
 	case "-":
 		result = itemOne - itemTwo
 	case "/":
+		if itemTwo == 0 {
+			return 0, fmt.Errorf("Division by zero not allowed")
+		}
 		result = itemOne / itemTwo
 	case "*":
 		result = itemOne * itemTwo
 	}
 
-	return result
+	return result, nil
 }
 
 
 func main() {
-	fmt.Println(evaluateExpression("9 2 3 8 4 + * -"))
+	fmt.Println(evaluateExpression("9 0 3 8 + * /"))
 }
 
 
