@@ -8,7 +8,7 @@ import (
 )
 
 func readCSV() ([][]string, error) {
-	fileName, err := os.Open("data.csv");
+	fileName, err := os.Open("C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Sort-Data/data.csv");
 	if err != nil {
 		return nil, err;
 	}
@@ -24,7 +24,7 @@ func readCSV() ([][]string, error) {
 }
 
 func writeCSV(data [][]string) {
-	fileName, err := os.Create("sorted-data.csv");
+	fileName, err := os.Create("C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Sort-Data/sorted-data.csv");
 	if err != nil {
 		fmt.Println("Cannot read the CSV file");
 		os.Exit(1);
