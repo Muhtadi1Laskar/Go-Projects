@@ -1,9 +1,37 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
+	"strings"
 	"unicode"
 )
+
+const PATH string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Ciphers/Vingere-Cipher/text.txt"
+
+func readFile() string {
+	var builder strings.Builder
+
+	file, err := os.Open(PATH)
+	if err != nil {
+		log.Fatalf("failed to open file: %v", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		builder.WriteString(scanner.Text())
+		builder.WriteString("\n")
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatalf("error while reading file: %v", err)
+	}
+
+	return builder.String()
+}
 
 func vingereCipher(data string, key string, encrypt bool) string {
 	keyRunes := []rune(key)
@@ -37,12 +65,13 @@ func vingereCipher(data string, key string, encrypt bool) string {
 }
 
 func main() {
-	plainText := "Hello"
+	plainText := readFile()
 	key := "KEY"
 
+
 	encrypted := vingereCipher(plainText, key, true)
-	decrypted := vingereCipher(encrypted, key, false)
+	// decrypted := vingereCipher(encrypted, key, false)
 
 	fmt.Println(encrypted)
-	fmt.Println(decrypted)
+	// fmt.Println(decrypted)
 }
