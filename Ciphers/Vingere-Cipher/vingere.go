@@ -68,10 +68,9 @@ func main() {
 	plainText := readFile()
 	key := "KEY"
 
-
 	encrypted := vingereCipher(plainText, key, true)
-	// decrypted := vingereCipher(encrypted, key, false)
+	decrypted := vingereCipher(encrypted, key, false)
 
 	fmt.Println(encrypted)
-	// fmt.Println(decrypted)
+	fmt.Println(decrypted)
 }
