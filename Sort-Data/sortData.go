@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"math/rand"
 	"os"
 	"strconv"
 )
@@ -61,6 +62,16 @@ func converToString(data []int) [][]string {
 	return array;
 }
 
+func generateRandomArray() [][]string {
+	var size int = 100000;
+	var array []int = make([]int, size)
+
+	for i := 0; i < size; i++ {
+		array[i] = rand.Intn(1000000)
+	}
+	return converToString(array)
+}
+
 func insertionSort(array []int) [][]string {
 	for i := 0; i < len(array); i++ {
 		var key int = array[i];
@@ -75,6 +86,64 @@ func insertionSort(array []int) [][]string {
 	return converToString(array);
 }
 
+func merge(left, right []int) []int {
+	var merged []int
+	var i int = 0
+	var j int = 0
+
+	for i < len(left) && j < len(right) {
+		if left[i] < right[j] {
+			merged = append(merged, left[i])
+		} else {
+			merged = append(merged, right[j])
+		}
+	}
+	merged = append(merged, left[i:]...)
+	merged = append(merged, right[j:]...)
+
+	return merged
+}
+
+func mergeSort(array []int) []int {
+	if len(array) <= 1 {
+		return array
+	}
+	var mid int = len(array) / 2
+	var left []int = mergeSort(array[:mid])
+	var right []int = mergeSort(array[mid:])
+
+	return merge(left, right)
+}
+
+func QuickSort(arr []int) {
+	if len(arr) < 2 {
+		return
+	}
+
+	left, right := 0, len(arr)-1
+
+	// Pick a pivot index randomly
+	pivotIndex := rand.Intn(len(arr))
+
+	// Move the pivot to the right
+	arr[pivotIndex], arr[right] = arr[right], arr[pivotIndex]
+
+	// Partitioning process
+	for i := range arr {
+		if arr[i] < arr[right] {
+			arr[i], arr[left] = arr[left], arr[i]
+			left++
+		}
+	}
+
+	// Move pivot to its final place
+	arr[left], arr[right] = arr[right], arr[left]
+
+	// Sort the left and right subarrays
+	QuickSort(arr[:left])
+	QuickSort(arr[left+1:])
+}
+
 func main() {
 	data, err := readCSV();
 	if err != nil {
@@ -83,9 +152,15 @@ func main() {
 	}
 
 	var array []int = buildArray(data);
-	var sortedArray [][]string = insertionSort(array);
+	// var sortedArray [][]string = insertionSort(array);
 
-	writeCSV(sortedArray);
+	QuickSort(array);
+	var stringArray [][]string = converToString(array)
+	writeCSV(stringArray);
 
-	fmt.Println(sortedArray);
+	// fmt.Println(sortedArray);
+
+	// var randomNum [][]string = generateRandomArray()
+
+	// writeCSV(randomNum)
 }
