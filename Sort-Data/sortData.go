@@ -3,148 +3,106 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"strconv"
 )
 
+// Read CSV data from a file.
 func readCSV() ([][]string, error) {
 	path, err := getFilePath("output")
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 
-	fileName, err := os.Open(path);
+	file, err := os.Open(path)
 	if err != nil {
-		return nil, err;
+		return nil, err
 	}
-	defer fileName.Close();
+	defer file.Close()
 
-	rawData := csv.NewReader(fileName);
-	data, err := rawData.ReadAll();
+	reader := csv.NewReader(file)
+	data, err := reader.ReadAll()
 	if err != nil {
-		return nil, err;
+		return nil, err
 	}
 
 	return data, nil
 }
 
+// Write CSV data to a file.
 func writeCSV(data [][]string, filename string) {
 	path, err := getFilePath(filename)
 	if err != nil {
-		fmt.Print(err)
-		return
+		log.Fatal(err)
 	}
 
-	fileName, err := os.Create(path);
+	file, err := os.Create(path)
 	if err != nil {
-		fmt.Println("Cannot read the CSV file");
-		os.Exit(1);
+		log.Fatalf("cannot create the CSV file: %v", err)
 	}
-	defer fileName.Close();
+	defer file.Close()
 
-	csvWrite:= csv.NewWriter(fileName);
-	if err = csvWrite.WriteAll(data); err != nil {
-		fmt.Println("Cannot read the CSV file");
-		os.Exit(1);
+	writer := csv.NewWriter(file)
+	if err := writer.WriteAll(data); err != nil {
+		log.Fatalf("cannot write to the CSV file: %v", err)
 	}
-	
-	csvWrite.Flush();
-	if err := csvWrite.Error(); err != nil {
-		fmt.Println("Error flushing CSV writer:", err)
-		os.Exit(1)
+
+	writer.Flush()
+	if err := writer.Error(); err != nil {
+		log.Fatalf("error flushing CSV writer: %v", err)
 	}
 }
 
+// Build an integer array from CSV data.
 func buildArray(data [][]string) []int {
-	array := make([]int, 0, len(data));
+	array := make([]int, 0, len(data))
 	for _, elem := range data {
-		num, _ := strconv.Atoi(elem[0]);
-		array = append(array, num);
-	} 
-	return array;
-}
-
-func converToString(data []int) [][]string {
-	array := make([][]string, len(data));
-	for i, elem := range data {
-		array[i] = []string{strconv.Itoa(elem)};
+		num, _ := strconv.Atoi(elem[0])
+		array = append(array, num)
 	}
-	return array;
+	return array
 }
 
-func generateRandomArray(size int) []int {
-	var array []int = make([]int, size)
+// Convert integer array to a 2D string array.
+func convertToString(data []int) [][]string {
+	array := make([][]string, len(data))
+	for i, elem := range data {
+		array[i] = []string{strconv.Itoa(elem)}
+	}
+	return array
+}
 
+// Generate a random integer array.
+func generateRandomArray(size int) []int {
+	array := make([]int, size)
 	for i := 0; i < size; i++ {
 		array[i] = rand.Intn(1000000)
 	}
 	return array
 }
 
+// Retrieve file path based on filename.
 func getFilePath(filename string) (string, error) {
-	PATHS := map[string]string{
+	paths := map[string]string{
 		"output": "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Sort-Data/data.csv",
-		"input": "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Sort-Data/sorted-data.csv",
+		"input":  "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Sort-Data/sorted-data.csv",
 	}
 
-	if path, ok := PATHS[filename]; ok {
+	if path, ok := paths[filename]; ok {
 		return path, nil
 	}
-	return " ", fmt.Errorf("Invalid Filename: %s", filename)
+	return "", fmt.Errorf("invalid filename: %s", filename)
 }
 
-func insertionSort(array []int) [][]string {
-	for i := 0; i < len(array); i++ {
-		var key int = array[i];
-		var j int = i - 1;
-
-		for j >= 0 && array[j] > key {
-			array[j+1] = array[j];
-			j--;
-		}
-		array[j+1] = key;
-	}
-	return converToString(array);
-}
-
-func merge(left, right []int) []int {
-	var merged []int
-	var i int = 0
-	var j int = 0
-
-	for i < len(left) && j < len(right) {
-		if left[i] < right[j] {
-			merged = append(merged, left[i])
-		} else {
-			merged = append(merged, right[j])
-		}
-	}
-	merged = append(merged, left[i:]...)
-	merged = append(merged, right[j:]...)
-
-	return merged
-}
-
-func mergeSort(array []int) []int {
-	if len(array) <= 1 {
-		return array
-	}
-	var mid int = len(array) / 2
-	var left []int = mergeSort(array[:mid])
-	var right []int = mergeSort(array[mid:])
-
-	return merge(left, right)
-}
-
-func QuickSort(arr []int) {
+// Perform quicksort on the array.
+func quickSort(arr []int) {
 	if len(arr) < 2 {
 		return
 	}
 
 	left, right := 0, len(arr)-1
-
 	pivotIndex := rand.Intn(len(arr))
 	arr[pivotIndex], arr[right] = arr[right], arr[pivotIndex]
 
@@ -157,27 +115,26 @@ func QuickSort(arr []int) {
 
 	arr[left], arr[right] = arr[right], arr[left]
 
-	QuickSort(arr[:left])
-	QuickSort(arr[left+1:])
+	quickSort(arr[:left])
+	quickSort(arr[left+1:])
 }
 
 func main() {
-	var outputArray []int = generateRandomArray(300)
-	var outputFormattedArray [][]string = converToString(outputArray)
-	
-	writeCSV(outputFormattedArray, "output")
+	// Generate random array and write to CSV.
+	outputArr := generateRandomArray(100)
+	outputFormattedArr := convertToString(outputArr)
+	writeCSV(outputFormattedArr, "output")
 
-	data, err := readCSV();
+	// Read CSV, build array, and sort.
+	data, err := readCSV()
 	if err != nil {
-		fmt.Println(err);
-		os.Exit(1);
+		log.Fatal(err)
 	}
 
-	var unsortedArray []int = buildArray(data);
+	unsortedArr := buildArray(data)
+	quickSort(unsortedArr)
 
-	QuickSort(unsortedArray)
-
-	var sortedFormattedArray [][]string = converToString(unsortedArray)
-
-	writeCSV(sortedFormattedArray, "input")
+	// Write sorted array to a new CSV file.
+	sortedFormattedArr := convertToString(unsortedArr)
+	writeCSV(sortedFormattedArr, "input")
 }
