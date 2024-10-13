@@ -121,7 +121,7 @@ func quickSort(arr []int) {
 
 func main() {
 	// Generate random array and write to CSV.
-	outputArr := generateRandomArray(100)
+	outputArr := generateRandomArray(1000000)
 	outputFormattedArr := convertToString(outputArr)
 	writeCSV(outputFormattedArr, "output")
 
