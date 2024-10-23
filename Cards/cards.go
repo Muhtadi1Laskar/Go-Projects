@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type deck []string
 
 func newDeck() deck {
@@ -13,4 +15,10 @@ func newDeck() deck {
 		}
 	}
 	return cards
+}
+
+func (d deck) Print() {
+	for i, card := range d {
+		fmt.Println(i, card)
+	}
 }
