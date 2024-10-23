@@ -3,6 +3,8 @@ package main
 
 func main() {
 	cards := newDeck()
+	dealtCard, resetDeck := deal(cards, 4)
 
-	cards.Print()
+	dealtCard.Print()
+	resetDeck.Print()
 }
