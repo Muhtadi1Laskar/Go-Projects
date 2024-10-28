@@ -36,6 +36,28 @@ func (list *LinkedList) Append(value string) {
 	return
 }
 
+func (list *LinkedList) Print() {
+	if list.isEmpty() {
+		return 
+	}
+	currentNode := list.head
+
+	for i := 1; currentNode != nil; i++ {
+		fmt.Printf("%d: %s\n", i, currentNode.value)
+		currentNode = currentNode.next
+	}
+}
+
 func main() {
-	fmt.Println("Hello World")
+	tasks := NewLinkedList()
+
+	tasks.Append("C")
+	tasks.Append("JavaScript")
+	tasks.Append("Python")
+	tasks.Append("Go")
+	tasks.Append("Julia")
+	tasks.Append("Odin")
+	tasks.Append("Haskell")
+
+	tasks.Print()
 }
