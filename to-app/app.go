@@ -4,17 +4,17 @@ import "fmt"
 
 type Node struct {
 	value string
-	next *Node
+	next  *Node
 }
 
 type LinkedList struct {
-	head *Node
-	tail *Node
+	head   *Node
+	tail   *Node
 	length int
 }
 
 func NewLinkedList() *LinkedList {
-	return &LinkedList{ }
+	return &LinkedList{}
 }
 
 func (list *LinkedList) isEmpty() bool {
@@ -22,7 +22,7 @@ func (list *LinkedList) isEmpty() bool {
 }
 
 func (list *LinkedList) Append(value string) {
-	newNode := &Node{ value: value }
+	newNode := &Node{value: value}
 
 	if list.isEmpty() {
 		list.head = newNode
@@ -36,12 +36,12 @@ func (list *LinkedList) Append(value string) {
 	return
 }
 
-func (list *LinkedList) Insert (index int, value string) {
+func (list *LinkedList) Insert(index int, value string) {
 	if index <= 0 || index > list.length+1 {
 		fmt.Printf("Index out of bound\n")
 		return
 	}
-	newNode := &Node{ value: value }
+	newNode := &Node{value: value}
 
 	if list.isEmpty() {
 		list.head = newNode
@@ -65,12 +65,12 @@ func (list *LinkedList) Insert (index int, value string) {
 	newNode.next = currentNode
 	list.length++
 	return
- 
+
 }
 
 func (list *LinkedList) Print() {
 	if list.isEmpty() {
-		return 
+		return
 	}
 	currentNode := list.head
 
@@ -92,7 +92,6 @@ func main() {
 	tasks.Append("Go for a walk")
 	tasks.Append("Go to supermarker")
 
-	
 	tasks.Print()
 	tasks.Insert(5, "Read the book Grokking Algorithm")
 	tasks.Print()
