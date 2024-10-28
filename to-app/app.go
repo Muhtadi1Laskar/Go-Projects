@@ -4,6 +4,7 @@ import "fmt"
 
 type Node struct {
 	value string
+	isCompleted bool
 	next  *Node
 }
 
@@ -22,7 +23,7 @@ func (list *LinkedList) isEmpty() bool {
 }
 
 func (list *LinkedList) Append(value string) {
-	newNode := &Node{value: value}
+	newNode := &Node{value: value, isCompleted: false}
 
 	if list.isEmpty() {
 		list.head = newNode
@@ -102,7 +103,7 @@ func (list *LinkedList) Print() {
 	currentNode := list.head
 
 	for i := 1; currentNode != nil; i++ {
-		fmt.Printf("%d: %s\n", i, currentNode.value)
+		fmt.Printf("%d: %s (Is Completed: %t)\n", i, currentNode.value, currentNode.isCompleted)
 		currentNode = currentNode.next
 	}
 	fmt.Println()
