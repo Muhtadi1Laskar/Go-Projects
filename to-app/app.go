@@ -68,6 +68,33 @@ func (list *LinkedList) Insert(index int, value string) {
 
 }
 
+func (list *LinkedList) Delete(index int) {
+	if index <= 0 || index >= list.length+1 {
+		fmt.Println("Index out of bound")
+		return
+	}
+
+	if list.isEmpty() {
+		fmt.Println("The list is empty")
+		return 
+	}
+
+	node := list.head
+	if index == 1 {
+		list.head = node.next
+		list.length--
+		return
+	}
+
+	for i := 1; i < index-1; i++ {
+		node = node.next
+	}
+	nodeToDelete := node.next
+	node.next = nodeToDelete.next
+	list.length--
+	return
+}
+
 func (list *LinkedList) Print() {
 	if list.isEmpty() {
 		return
@@ -95,4 +122,8 @@ func main() {
 	tasks.Print()
 	tasks.Insert(5, "Read the book Grokking Algorithm")
 	tasks.Print()
+
+	tasks.Delete(4)
+	tasks.Print()
+
 }
