@@ -17,6 +17,10 @@ func NewLinkedList() *LinkedList {
 	return &LinkedList{ }
 }
 
+func (list *LinkedList) isEmpty() bool {
+	return list.head == nil
+}
+
 func main() {
 	fmt.Println("Hello World")
 }
