@@ -96,6 +96,26 @@ func (list *LinkedList) Delete(index int) {
 	return
 }
 
+func (list *LinkedList) ChangeStatus(index int, status bool) {
+	if index <= 0 || index > list.length + 1 {
+		fmt.Println("Index out of bound")
+		return
+	}
+	if list.isEmpty() {
+		fmt.Println("The list is empty")
+		return
+	}
+	currentNode := list.head
+
+	for i := 1; currentNode != nil; i++ {
+		if i == index {
+			currentNode.isCompleted = status
+			return
+		}
+		currentNode = currentNode.next
+	}
+}
+
 func (list *LinkedList) Print() {
 	if list.isEmpty() {
 		return
@@ -127,4 +147,6 @@ func main() {
 	tasks.Delete(4)
 	tasks.Print()
 
+	tasks.ChangeStatus(7, true)
+	tasks.Print()
 }
