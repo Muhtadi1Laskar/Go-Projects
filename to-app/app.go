@@ -3,9 +3,9 @@ package main
 import "fmt"
 
 type Node struct {
-	value string
+	value       string
 	isCompleted bool
-	next  *Node
+	next        *Node
 }
 
 type LinkedList struct {
@@ -77,7 +77,7 @@ func (list *LinkedList) Delete(index int) {
 
 	if list.isEmpty() {
 		fmt.Println("The list is empty")
-		return 
+		return
 	}
 
 	node := list.head
