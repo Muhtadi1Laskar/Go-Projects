@@ -15,14 +15,28 @@ type Block struct {
 	previousHash string
 }
 
+type Response struct {
+	message      string
+	index        int
+	timestamp    string
+	proof        int
+	previousHash string
+}
+
 type Chain struct {
 	chain []*Block
 }
 
+func NewBlockChain() *Chain {
+	c := &Chain{}
+	c.createBlock(1, "0")
+	return c
+}
+
 func (c *Chain) createBlock(proof int, previousHash string) *Block {
 	newBlock := &Block{
-		index:        len(c.chain),
-		timestamp:    time.Now().Format("2006-01-02 15:04:05"),
+		index:        len(c.chain) + 1,
+		timestamp:    time.Now().Format(time.RFC3339),
 		proof:        proof,
 		previousHash: previousHash,
 	}
@@ -40,7 +54,8 @@ func (c *Chain) pow(prevProof int) int {
 	var checkProof bool = false
 
 	for !checkProof {
-		hashOperation := sha521(strconv.Itoa(newProof * 2 - prevProof*2))
+		num := (newProof * newProof) - (prevProof * prevProof)
+		hashOperation := sha521(strconv.Itoa(num))
 
 		if hashOperation[:4] == "0000" {
 			checkProof = true
@@ -68,9 +83,27 @@ func sha521(text string) string {
 	return encodedStr
 }
 
-func main() {
-	chain := &Chain{}
-	block := chain.createBlock(12345, "0")
+func (chain *Chain) mineBlock() *Response {
+	previousBlock := chain.getPrevBlock()
+	previousProof := previousBlock.proof
+	proof := chain.pow(previousProof)
+	previousHash := chain.hash(previousBlock)
+	block := chain.createBlock(proof, previousHash)
 
-	fmt.Printf("%+v\n", block)
+	return &Response{
+		message:      "Congragulations you just mined a block",
+		index:        block.index,
+		timestamp:    block.timestamp,
+		proof:        block.proof,
+		previousHash: block.previousHash,
+	}
+}
+
+func main() {
+	chain := NewBlockChain()
+	for i := 0; i < 100; i++ {
+		block := chain.mineBlock()
+
+		fmt.Printf("%+v\n\n", block)
+	}
 }
