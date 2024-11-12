@@ -3,9 +3,9 @@ package main
 import (
 	"crypto/sha512"
 	"encoding/hex"
-	"fmt"
 	"strconv"
 	"time"
+	"fmt"
 )
 
 type Block struct {
@@ -83,7 +83,7 @@ func sha521(text string) string {
 	return encodedStr
 }
 
-func (chain *Chain) mineBlock() *Response {
+func (chain *Chain) MineBlock() *Response {
 	previousBlock := chain.getPrevBlock()
 	previousProof := previousBlock.proof
 	proof := chain.pow(previousProof)
@@ -102,7 +102,7 @@ func (chain *Chain) mineBlock() *Response {
 func main() {
 	chain := NewBlockChain()
 	for i := 0; i < 10; i++ {
-		block := chain.mineBlock()
+		block := chain.MineBlock()
 
 		fmt.Printf(" Message: %s\n Index: %d\n Timestamp: %s\n Proof: %d\n Previous Hash: %s\n", block.message, block.index, block.timestamp, block.proof, block.message)
 	}
