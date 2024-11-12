@@ -101,9 +101,9 @@ func (chain *Chain) mineBlock() *Response {
 
 func main() {
 	chain := NewBlockChain()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10; i++ {
 		block := chain.mineBlock()
 
-		fmt.Printf("%+v\n\n", block)
+		fmt.Printf(" Message: %s\n Index: %d\n Timestamp: %s\n Proof: %d\n Previous Hash: %s\n", block.message, block.index, block.timestamp, block.proof, block.message)
 	}
 }
