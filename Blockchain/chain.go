@@ -35,6 +35,22 @@ func (c *Chain) getPrevBlock() *Block {
 	return c.chain[len(c.chain)-1]
 }
 
+func (c *Chain) pow(prevProof int) int {
+	var newProof int = 1
+	var checkProof bool = false
+
+	for !checkProof {
+		hashOperation := sha521(strconv.Itoa(newProof * 2 - prevProof*2))
+
+		if hashOperation[:4] == "0000" {
+			checkProof = true
+		} else {
+			newProof++
+		}
+	}
+	return newProof
+}
+
 func (c *Chain) hash(block *Block) string {
 	record := strconv.Itoa(block.index) + block.timestamp + strconv.Itoa(block.proof) + block.previousHash
 	hash := sha521(record)
