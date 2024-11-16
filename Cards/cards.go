@@ -56,7 +56,6 @@ func (d deck) shuffle() {
 	source := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(source)
 
-
 	for i := range d {
 		newPosition := r.Intn(len(d) - 1)
 
