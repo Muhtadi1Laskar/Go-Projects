@@ -22,12 +22,12 @@ func NewStack() *Stack {
 }
 
 func (stack *Stack) Push(item int) {
-	newNode := &Node{ value: item }
+	newNode := &Node{value: item}
 
 	if stack.top == nil {
 		stack.top = newNode
 		stack.bottom = newNode
-		stack.len++;
+		stack.len++
 		return
 	}
 	newNode.next = stack.top
@@ -113,9 +113,6 @@ func calculate(itemOne int, itemTwo int, operator string) (int, error) {
 	return result, nil
 }
 
-
 func main() {
 	fmt.Println(evaluateExpression("9 0 3 8 + * /"))
 }
-
-
