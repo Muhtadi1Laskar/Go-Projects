@@ -97,7 +97,7 @@ func (list *LinkedList) Delete(index int) {
 }
 
 func (list *LinkedList) ChangeStatus(index int, status bool) {
-	if index <= 0 || index > list.length + 1 {
+	if index <= 0 || index > list.length+1 {
 		fmt.Println("Index out of bound")
 		return
 	}
