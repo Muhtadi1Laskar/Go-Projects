@@ -12,80 +12,80 @@ import (
 	"strings"
 )
 
-const filePath string = "hash_output.json";
+const filePath string = "hash_output.json"
 
 type Hash struct {
 	H string `json: "hash"`
 }
 
 func saveToJSON(data Hash) error {
-	file, err := os.Create(filePath);
+	file, err := os.Create(filePath)
 	if err != nil {
-		return err;
+		return err
 	}
-	defer file.Close();
+	defer file.Close()
 
 	jsonData, err := json.MarshalIndent(data, "", " ")
 	if err != nil {
-		return err;
+		return err
 	}
 
-	_, err = file.Write(jsonData);
+	_, err = file.Write(jsonData)
 	if err != nil {
-		return err;
+		return err
 	}
 
-	return nil;
+	return nil
 }
 
 func readJsonFile() (Hash, error) {
-	var data Hash;
+	var data Hash
 
-	file, err := os.Open(filePath);
+	file, err := os.Open(filePath)
 	if err != nil {
-		return data, err;
+		return data, err
 	}
-	defer file.Close();
+	defer file.Close()
 
-	fileContent, err := io.ReadAll(file);
+	fileContent, err := io.ReadAll(file)
 	if err != nil {
-		return data, err;
-	}
-
-	err = json.Unmarshal(fileContent, &data);
-	if err != nil {
-		return data, err;
+		return data, err
 	}
 
-	return data, nil;
+	err = json.Unmarshal(fileContent, &data)
+	if err != nil {
+		return data, err
+	}
+
+	return data, nil
 }
 
 func readFile() string {
-	var builder strings.Builder;
-	file, err := os.Open("files/one-text.txt");
+	var builder strings.Builder
+	file, err := os.Open("files/one-text.txt")
 	if err != nil {
-		log.Fatal(err);
+		log.Fatal(err)
 	}
-	defer file.Close();
+	defer file.Close()
 
-	scanner := bufio.NewScanner(file);
+	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		builder.WriteString(scanner.Text() + "\n");
+		builder.WriteString(scanner.Text() + "\n")
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err);
+		log.Fatal(err)
 	}
-	return builder.String();
+	return builder.String()
 }
 
 func hashFunction(text string) Hash {
-	byteMessage := []byte(text);
-	hash := sha512.New();
-	hash.Write(byteMessage);
+	byteMessage := []byte(text)
+	hash := sha512.New()
+	hash.Write(byteMessage)
 
-	hashedBytes := hash.Sum(nil);
-	encodedStr := hex.EncodeToString(hashedBytes);
+	hashedBytes := hash.Sum(nil)
+	encodedStr := hex.EncodeToString(hashedBytes)
 
 	return Hash{
 		H: encodedStr,
@@ -93,29 +93,29 @@ func hashFunction(text string) Hash {
 }
 
 func detectChange() (bool, error) {
-	var message string = readFile();
-	hashedMessage := hashFunction(message);
-	previousHash, err := readJsonFile();
+	var message string = readFile()
+	hashedMessage := hashFunction(message)
+	previousHash, err := readJsonFile()
 	if err != nil {
-		return false, err;
+		return false, err
 	}
-	return previousHash.H == hashedMessage.H, nil;
+	return previousHash.H == hashedMessage.H, nil
 }
 
 func main() {
-	var message string = readFile();
-	hashedMsg := hashFunction(message);
-	err := saveToJSON(hashedMsg);
+	var message string = readFile()
+	hashedMsg := hashFunction(message)
+	err := saveToJSON(hashedMsg)
 	if err != nil {
-		log.Fatal(err);
+		log.Fatal(err)
 	}
-	isChanged, err := detectChange();
+	isChanged, err := detectChange()
 	if err != nil {
-		fmt.Println(err);
-		os.Exit(1);
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
-	fmt.Println(isChanged);
+	fmt.Println(isChanged)
 
-    fmt.Printf("SHA256: %s\n", hashedMsg);
+	fmt.Printf("SHA256: %s\n", hashedMsg)
 }
