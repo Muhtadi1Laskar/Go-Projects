@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+var PATH string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Text-analysis/dummy.txt"
+
 func readFile(PATH string) (string, error) {
 	var builder strings.Builder
 
@@ -27,11 +29,24 @@ func readFile(PATH string) (string, error) {
 	}
 
 	return builder.String(), nil
-
 } 
+
+func capitalize(data string) string {
+	return strings.ToUpper(data)
+}
+
+func deCapitalize(data string) string {
+	return strings.ToLower(data)
+}
 
 
 
 func main() {
-	fmt.Println("Hello World")
+	text, err := readFile(PATH)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(deCapitalize(text))
 }
