@@ -55,8 +55,14 @@ func capitalizeFirst(data string) string {
 	return strings.TrimSpace(result.String())
 }
 
-func frequency(data string) map[rune]int {
-	hashMap := make(map[rune]int)
+func frequency(data string) map[string]int {
+	hashMap := make(map[string]int)
+	format := strings.ReplaceAll(data, " ", "")
+	data = strings.ToLower(format)
+
+	for _, char := range data {
+		hashMap[string(char)]++
+	}
 	return hashMap
 }
 
@@ -68,5 +74,6 @@ func main() {
 		return
 	}
 
-	fmt.Println(capitalizeFirst(text))
+	// fmt.Println(capitalizeFirst(text))
+	fmt.Println(frequency(text))
 }
