@@ -55,6 +55,11 @@ func capitalizeFirst(data string) string {
 	return strings.TrimSpace(result.String())
 }
 
+func frequency(data string) map[rune]int {
+	hashMap := make(map[rune]int)
+	return hashMap
+}
+
 
 func main() {
 	text, err := readFile(PATH)
