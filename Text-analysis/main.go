@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"unicode"
 )
 
 var PATH string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Text-analysis/dummy.txt"
@@ -39,6 +40,20 @@ func deCapitalize(data string) string {
 	return strings.ToLower(data)
 }
 
+func capitalizeFirst(data string) string {
+	var result strings.Builder
+	words := strings.Fields(data)
+
+	for _, word := range words {
+		runes := []rune(word)
+		if len(runes) > 0 {
+			result.WriteRune(unicode.ToUpper(runes[0]))
+			result.WriteString(strings.ToLower(string(runes[1:])))
+		}
+		result.WriteRune(' ')
+	}
+	return strings.TrimSpace(result.String())
+}
 
 
 func main() {
@@ -48,5 +63,5 @@ func main() {
 		return
 	}
 
-	fmt.Println(deCapitalize(text))
+	fmt.Println(capitalizeFirst(text))
 }
