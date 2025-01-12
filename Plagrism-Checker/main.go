@@ -100,14 +100,13 @@ func readFile(PATH string) (string, error) {
 	return builder.String(), nil
 }
 
-
 func main() {
 	var rootPath string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects"
-	documentOne, _ := readFile(rootPath+"/Plagrism-Checker/document1.txt")
-    documentTwo, _ := readFile(rootPath+"/Plagrism-Checker/document2.txt")
+	documentOne, _ := readFile(rootPath + "/Plagrism-Checker/document1.txt")
+	documentTwo, _ := readFile(rootPath + "/Plagrism-Checker/document2.txt")
 	var size int = 3
 
 	var similarity float64 = compareDocuments(documentOne, documentTwo, size)
 
-	fmt.Printf("Similarity: %.2f%%\n", similarity * 100)
+	fmt.Printf("Similarity: %.2f%%\n", similarity*100)
 }
