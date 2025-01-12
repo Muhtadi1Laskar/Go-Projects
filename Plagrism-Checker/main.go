@@ -56,44 +56,31 @@ func compareDocuments(doc1, doc2 string, shingleSize int) float64 {
 }
 
 var stopWordsSet = map[string]struct{}{
-	"a": {}, "an": {}, "the": {}, "is": {}, "are": {}, "was": {}, "were": {}, "will": {}, "be": {},
+	"a": {}, "an": {}, "this": {}, "the": {}, "is": {}, "are": {}, "was": {}, "were": {}, "will": {}, "be": {},
 	"in": {}, "on": {}, "at": {}, "of": {}, "for": {}, "to": {}, "from": {}, "with": {},
 	"and": {}, "or": {}, "but": {}, "not": {}, "if": {}, "then": {}, "else": {},
 	"i": {}, "you": {}, "he": {}, "she": {}, "it": {}, "we": {}, "they": {}, "my": {}, "your": {}, "his": {}, "her": {}, "its": {}, "our": {}, "their": {},
 }
 
-func removeStopWords(text string) string {
-	var stopWords []string = []string{"a", "an", "the", "this", "is", "are", "was", "were", "will", "be",
-	"in", "on", "at", "of", "for", "to", "from", "with",
-	"and", "or", "but", "not", "if", "then", "else",
-	"i", "you", "he", "she", "it", "we", "they", "my", "your", "his", "her", "its", "our", "their"}
+func removeStopWord(text string) string {
+	formattedText := strings.Fields(strings.ToLower(text))
+	filteredWords := make([]string, 0, len(formattedText))
 
-	var words []string = strings.Fields(strings.ToLower(text))
-	var filteredWords []string
-
-	for _, word := range words {
-		if !contains(word, stopWords) {
+	for _, word := range formattedText {
+		if _, exists := stopWordsSet[word]; !exists {
 			filteredWords = append(filteredWords, word)
 		}
 	}
 	return strings.Join(filteredWords, " ")
 }
 
-func contains(word string, stopWords []string) bool {
-	for _, data := range stopWords {
-		if data == word {
-			return true
-		}
-	}
-	return false
-}
 
 func main() {
 	var documentOne string = "This is an example sentence to remove stop words."
 	var documentTwo string = "This is also a fucking string"
 	var size int = 3
 
-	fmt.Println(removeStopWords(documentOne))
+	fmt.Println(removeStopWord(documentOne))
 
 	var similarity float64 = compareDocuments(documentOne, documentTwo, size)
 
