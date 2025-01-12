@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"crypto/sha256"
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -73,12 +75,36 @@ func removeStopWord(text string) string {
 		}
 	}
 	return strings.Join(filteredWords, " ")
+
+}
+
+func readFile(PATH string) (string, error) {
+	var builder strings.Builder
+
+	file, err := os.Open(PATH)
+	if err != nil {
+		return "", fmt.Errorf("failed to open the file: %v/n", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		builder.WriteString(scanner.Text())
+		builder.WriteString("\n")
+	}
+
+	if err := scanner.Err(); err != nil {
+		return "", fmt.Errorf("error while reading file: %v", err)
+	}
+
+	return builder.String(), nil
 }
 
 
 func main() {
-	documentOne := "Plagiarism detection is important for original work."
-    documentTwo := "Detection of plagiarism is crucial to maintain originality."
+	var rootPath string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects"
+	documentOne, _ := readFile(rootPath+"/Plagrism-Checker/document1.txt")
+    documentTwo, _ := readFile(rootPath+"/Plagrism-Checker/document2.txt")
 	var size int = 3
 
 	var similarity float64 = compareDocuments(documentOne, documentTwo, size)
