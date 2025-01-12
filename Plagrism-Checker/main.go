@@ -36,12 +36,30 @@ func jaccardSimilarity(set1, set2 map[string]struct{}) float64 {
 	return float64(intersection) / float64(union-intersection)
 }
 
+func compareDocuments(doc1, doc2 string, shingleSize int) float64 {
+	shinglesOne := generateShingle(doc1, shingleSize)
+	shingleTwo := generateShingle(doc2, shingleSize)
+
+	hashSetOne := make(map[string]struct{})
+	hashSetTwo := make(map[string]struct{})
+
+	for _, hash := range hashShingles(shinglesOne) {
+		hashSetOne[hash] = struct{}{}
+	}
+
+	for _, hash := range hashShingles(shingleTwo) {
+		hashSetTwo[hash] = struct{}{}
+	}
+
+	return jaccardSimilarity(hashSetOne, hashSetTwo)
+}
+
 func main() {
-	var documentOne string = "This is a fucking string"
+	var documentOne string = "This is an example sentence to remove stop words."
+	var documentTwo string = "This is also a fucking string"
 	var size int = 3
 
-	shingles := generateShingle(documentOne, size)
-	hashes := hashShingles(shingles)
+	var similarity float64 = compareDocuments(documentOne, documentTwo, size)
 
-	fmt.Println(hashes)
+	fmt.Printf("Similarity: %.2f%%\n", similarity * 100)
 }
