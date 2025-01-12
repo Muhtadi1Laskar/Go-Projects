@@ -8,9 +8,10 @@ import (
 
 func generateShingle(data string, size int) []string {
 	var result []string
+	var formattedString string = removeStopWord(data)
 
-	for i := 0; i < len(data)-size; i++ {
-		result = append(result, data[i:i+size])
+	for i := 0; i < len(formattedString)-size; i++ {
+		result = append(result, formattedString[i:i+size])
 	}
 	return result
 }
@@ -76,11 +77,9 @@ func removeStopWord(text string) string {
 
 
 func main() {
-	var documentOne string = "This is an example sentence to remove stop words."
-	var documentTwo string = "This is also a fucking string"
+	documentOne := "Plagiarism detection is important for original work."
+    documentTwo := "Detection of plagiarism is crucial to maintain originality."
 	var size int = 3
-
-	fmt.Println(removeStopWord(documentOne))
 
 	var similarity float64 = compareDocuments(documentOne, documentTwo, size)
 
