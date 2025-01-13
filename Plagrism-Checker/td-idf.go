@@ -108,28 +108,46 @@ func readFiles(PATH string) (string, error) {
 	return builder.String(), nil
 }
 
-func main() {
-	var rootPath string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects"
-	dataOne, _ := readFiles(rootPath + "/Plagrism-Checker/document1.txt")
-	dataTwo, _ := readFiles(rootPath + "/Plagrism-Checker/document2.txt")
-	// Corpus of documents
-	corpus := [][]string{
-		tokenize(dataOne),
-	}
-
-	// Input document to check
-	inputDoc := tokenize(dataTwo)
-
-	// Calculate IDF for the corpus
-	idf := calculateIDF(corpus)
-
-	// Calculate TF-IDF for the input document
-	inputTFIDF := calculateTFIDF(inputDoc, idf)
-
-	// Compare input document with each document in the corpus
-	for i, document := range corpus {
-		corpusTFIDF := calculateTFIDF(document, idf)
-		similarity := cosineSimilarity(inputTFIDF, corpusTFIDF)
-		fmt.Printf("Similarity with Document %d: %.2f\n", i+1, similarity*100)
-	}
+var stopWordsSets = map[string]struct{}{
+	"a": {}, "an": {}, "this": {}, "the": {}, "is": {}, "are": {}, "was": {}, "were": {}, "will": {}, "be": {},
+	"in": {}, "on": {}, "at": {}, "of": {}, "for": {}, "to": {}, "from": {}, "with": {},
+	"and": {}, "or": {}, "but": {}, "not": {}, "if": {}, "then": {}, "else": {},
+	"i": {}, "you": {}, "he": {}, "she": {}, "it": {}, "we": {}, "they": {}, "my": {}, "your": {}, "his": {}, "her": {}, "its": {}, "our": {}, "their": {},
 }
+
+func removeStopWords(text string) string {
+	formattedText := strings.Fields(strings.ToLower(text))
+	filteredWords := make([]string, 0, len(formattedText))
+
+	for _, word := range formattedText {
+		if _, exists := stopWordsSets[word]; !exists {
+			filteredWords = append(filteredWords, word)
+		}
+	}
+	return strings.Join(filteredWords, " ")
+
+}
+
+// func main() {
+// 	var rootPath string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects"
+// 	dataOne, _ := readFiles(rootPath + "/Plagrism-Checker/document1.txt")
+// 	dataTwo, _ := readFiles(rootPath + "/Plagrism-Checker/document2.txt")
+// 	data1 := removeStopWords(dataOne)
+// 	data2 := removeStopWords(dataTwo)
+
+// 	corpus := [][]string{
+// 		tokenize(data1),
+// 	}
+
+// 	inputDoc := tokenize(data2)
+
+// 	idf := calculateIDF(corpus)
+
+// 	inputTFIDF := calculateTFIDF(inputDoc, idf)
+
+// 	for i, document := range corpus {
+// 		corpusTFIDF := calculateTFIDF(document, idf)
+// 		similarity := cosineSimilarity(inputTFIDF, corpusTFIDF)
+// 		fmt.Printf("Similarity with Document %d: %.2f\n", i+1, similarity*100)
+// 	}
+// }

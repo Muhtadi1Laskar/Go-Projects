@@ -32,11 +32,13 @@ func jaccardSimilarity(set1, set2 map[string]struct{}) float64 {
 	intersection := 0
 	union := len(set1) + len(set2)
 
+	
 	for key := range set1 {
 		if _, exists := set2[key]; exists {
 			intersection++
 		}
 	}
+	fmt.Println(intersection, union)
 	return float64(intersection) / float64(union-intersection)
 }
 
@@ -100,13 +102,13 @@ func readFile(PATH string) (string, error) {
 	return builder.String(), nil
 }
 
-// func main() {
-// 	var rootPath string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects"
-// 	documentOne, _ := readFile(rootPath + "/Plagrism-Checker/document1.txt")
-// 	documentTwo, _ := readFile(rootPath + "/Plagrism-Checker/document2.txt")
-// 	var size int = 3
+func main() {
+	var rootPath string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects"
+	documentOne, _ := readFile(rootPath + "/Plagrism-Checker/document1.txt")
+	documentTwo, _ := readFile(rootPath + "/Plagrism-Checker/document2.txt")
+	var size int = 3
 
-// 	var similarity float64 = compareDocuments(documentOne, documentTwo, size)
+	var similarity float64 = compareDocuments(documentOne, documentTwo, size)
 
-// 	fmt.Printf("Similarity: %.2f%%\n", similarity*100)
-// }
+	fmt.Printf("Similarity: %.2f%%\n", similarity*100)
+}
