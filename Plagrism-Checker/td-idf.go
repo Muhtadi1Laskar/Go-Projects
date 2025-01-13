@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"math"
+	"os"
 	"strings"
 )
 
@@ -59,4 +61,75 @@ func calculateTFIDF(words []string, idf map[string]float64) map[string]float64 {
 	}
 
 	return tfidf
+}
+
+func cosineSimilarity(vec1, vec2 map[string]float64) float64 {
+	var dotProduct, magnitudeA, magnitudeB float64
+
+	for word, value1 := range vec1 {
+		value2 := vec2[word]
+		dotProduct += value1 * value2
+		magnitudeA += value1 * value1
+	}
+
+	for _, value := range vec2 {
+		magnitudeB += value * value
+	}
+
+	magnitudeA = math.Sqrt(magnitudeA)
+	magnitudeB = math.Sqrt(magnitudeB)
+
+	if magnitudeA == 0 || magnitudeB == 0 {
+		return 0
+	}
+
+	return dotProduct / (magnitudeA * magnitudeB)
+}
+
+func readFiles(PATH string) (string, error) {
+	var builder strings.Builder
+
+	file, err := os.Open(PATH)
+	if err != nil {
+		return "", fmt.Errorf("failed to open the file: %v/n", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		builder.WriteString(scanner.Text())
+		builder.WriteString("\n")
+	}
+
+	if err := scanner.Err(); err != nil {
+		return "", fmt.Errorf("error while reading file: %v", err)
+	}
+
+	return builder.String(), nil
+}
+
+func main() {
+	var rootPath string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects"
+	dataOne, _ := readFiles(rootPath + "/Plagrism-Checker/document1.txt")
+	dataTwo, _ := readFiles(rootPath + "/Plagrism-Checker/document2.txt")
+	// Corpus of documents
+	corpus := [][]string{
+		tokenize(dataOne),
+	}
+
+	// Input document to check
+	inputDoc := tokenize(dataTwo)
+
+	// Calculate IDF for the corpus
+	idf := calculateIDF(corpus)
+
+	// Calculate TF-IDF for the input document
+	inputTFIDF := calculateTFIDF(inputDoc, idf)
+
+	// Compare input document with each document in the corpus
+	for i, document := range corpus {
+		corpusTFIDF := calculateTFIDF(document, idf)
+		similarity := cosineSimilarity(inputTFIDF, corpusTFIDF)
+		fmt.Printf("Similarity with Document %d: %.2f\n", i+1, similarity*100)
+	}
 }
