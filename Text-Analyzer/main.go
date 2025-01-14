@@ -113,7 +113,7 @@ func calculateFreq(text string) map[string]int {
 func tokenize(text string) []string {
 	formattedStr := strings.ToLower(text)
 	words := strings.FieldsFunc(formattedStr, func(char rune) bool {
-		return unicode.IsLetter(char) && unicode.IsNumber(char)
+		return !unicode.IsLetter(char) && !unicode.IsNumber(char)
 	})
 	return words
 }
@@ -179,7 +179,7 @@ func averageWordLenght(data string) float64 {
 func main() {
 	var path string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Text-Analyzer/text.txt"
 	data, _ := readFile(path)
-	// freq := calculateFreq(data)
+	freq := calculateFreq(data)
 
 	fmt.Println("Word Count:", count(data, "word-count"))
 	fmt.Println("Character Count:", count(data, "character-count"))
@@ -189,9 +189,9 @@ func main() {
 
 	fmt.Println(sufixStripping("The dogs are running quickly and happily after playing with gaining"))
 
-	// for key, value := range freq {
-	// 	fmt.Println(key, value)
-	// }
+	for key, value := range freq {
+		fmt.Println(key, value)
+	}
 }
 
 
