@@ -111,8 +111,11 @@ func calculateFreq(text string) map[string]int {
 }
 
 func tokenize(text string) []string {
-	text = strings.ToLower(text)
-	return strings.Fields(text)
+	formattedStr := strings.ToLower(text)
+	words := strings.FieldsFunc(formattedStr, func(char rune) bool {
+		return unicode.IsLetter(char) && unicode.IsNumber(char)
+	})
+	return words
 }
 
 func removeStopWords(text []string) []string {
@@ -190,3 +193,5 @@ func main() {
 	// 	fmt.Println(key, value)
 	// }
 }
+
+
