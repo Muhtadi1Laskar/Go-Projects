@@ -17,6 +17,7 @@ var stopWordsSet = map[string]struct{}{
 }
 
 func countWords(text string) int {
+	text = strings.TrimSpace(text)
 	return len(strings.Fields(text))
 }
 
@@ -25,6 +26,17 @@ func countCharacters(text string) int {
 
 	for _, char := range text {
 		if !isWhiteSpace(char) {
+			count++
+		}
+	}
+	return count
+}
+
+func countLetters(text string) int {
+	count := 0
+
+	for _, char := range text {
+		if unicode.IsLetter(char) {
 			count++
 		}
 	}
@@ -66,6 +78,8 @@ func count(text, operation string) int {
 		return countWords(text)
 	case "character-count":
 		return countCharacters(text)
+	case "letter-count":
+		return countLetters(text)
 	case "sentence-count":
 		return countSentences(text)
 	default:
@@ -134,16 +148,22 @@ func readFile(PATH string) (string, error) {
 	return builder.String(), nil
 }
 
+func averageWordLenght(data string) float64 {
+	return float64(count(data, "letter-count") / count(data, "word-count"))
+}
+
 func main() {
 	var path string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Text-Analyzer/text.txt"
 	data, _ := readFile(path)
-	freq := calculateFreq(data)
+	// freq := calculateFreq(data)
 
 	fmt.Println("Word Count:", count(data, "word-count"))
 	fmt.Println("Character Count:", count(data, "character-count"))
+	fmt.Println("Letter Count: ", count(data, "letter-count"))
 	fmt.Println("Sentence Count:", count(data, "sentence-count"))
+	fmt.Printf("Average Word Length: %.2f%%\n", averageWordLenght(data))
 
-	for key, value := range freq {
-		fmt.Println(key, value)
-	}
+	// for key, value := range freq {
+	// 	fmt.Println(key, value)
+	// }
 }
