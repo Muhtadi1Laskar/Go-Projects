@@ -65,7 +65,7 @@ func count(text, operation string) int {
 	}
 }
 
-func handlePunctuation(text string) string {
+func removePunctuation(text string) string {
 	var builder strings.Builder
 
 	for _, word := range text {
@@ -77,7 +77,7 @@ func handlePunctuation(text string) string {
 }
 
 func calculateFreq(text string) map[string]int {
-	formattedStr := handlePunctuation(text)
+	formattedStr := removePunctuation(text)
 	words := tokenize(formattedStr)
 	frequency := make(map[string]int)
 
