@@ -126,6 +126,27 @@ func removeStopWords(text []string) []string {
 	return filteredStr
 }
 
+func stemWord(text string) string {
+	suffixes := []string{"ly", "ing", "ed"}
+
+	for _, suffix := range suffixes {
+		if strings.HasSuffix(text, suffix) {
+			text = strings.TrimSuffix(text, suffix)
+			break
+		}
+	}
+	return text
+}
+
+func sufixStripping(text string) string {
+	words := strings.Fields(text)
+
+	for key, word := range words {
+		words[key] = stemWord(word)
+	}
+	return strings.Join(words, " ")
+}
+
 func readFile(PATH string) (string, error) {
 	var builder strings.Builder
 
@@ -162,6 +183,8 @@ func main() {
 	fmt.Println("Letter Count: ", count(data, "letter-count"))
 	fmt.Println("Sentence Count:", count(data, "sentence-count"))
 	fmt.Printf("Average Word Length: %.2f%%\n", averageWordLenght(data))
+
+	fmt.Println(sufixStripping("The dogs are running quickly and happily after playing with gaining"))
 
 	// for key, value := range freq {
 	// 	fmt.Println(key, value)
