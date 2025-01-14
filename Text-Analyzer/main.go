@@ -8,6 +8,14 @@ import (
 	"unicode"
 )
 
+var stopWordsSet = map[string]struct{}{
+	"a": {}, "an": {}, "this": {}, "the": {}, "is": {}, "are": {}, "was": {}, "were": {}, "will": {}, "be": {},
+	"in": {}, "on": {}, "at": {}, "of": {}, "for": {}, "to": {}, "from": {}, "with": {},
+	"and": {}, "or": {}, "but": {}, "not": {}, "if": {}, "then": {}, "else": {},
+	"i": {}, "you": {}, "he": {}, "she": {}, "it": {}, "we": {}, "they": {}, "my": {}, "your": {}, "his": {}, "her": {}, "its": {}, "our": {}, "their": {},
+	"couldve": {}, "couldnt": {}, "wouldnt": {}, "shouldnt": {}, "wasnt": {}, "wont": {}, "shallnt": {}, "didnt": {}, "weev": {}, "im": {},
+}
+
 func countWords(text string) int {
 	return len(strings.Fields(text))
 }
@@ -79,6 +87,7 @@ func removePunctuation(text string) string {
 func calculateFreq(text string) map[string]int {
 	formattedStr := removePunctuation(text)
 	words := tokenize(formattedStr)
+	words = removeStopWords(words)
 	frequency := make(map[string]int)
 
 	for _, word := range words {
@@ -90,6 +99,17 @@ func calculateFreq(text string) map[string]int {
 func tokenize(text string) []string {
 	text = strings.ToLower(text)
 	return strings.Fields(text)
+}
+
+func removeStopWords(text []string) []string {
+	var filteredStr []string
+
+	for _, word := range text {
+		if _, exists := stopWordsSet[word]; !exists {
+			filteredStr = append(filteredStr, word)
+		}
+	}
+	return filteredStr
 }
 
 func readFile(PATH string) (string, error) {
