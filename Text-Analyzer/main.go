@@ -91,7 +91,7 @@ func removePunctuation(text string) string {
 	var builder strings.Builder
 
 	for _, word := range text {
-		if word == '-' || word == '\'' ||!unicode.IsPunct(word) {
+		if word == '-' || word == '\'' || !unicode.IsPunct(word) {
 			builder.WriteRune(word)
 		}
 	}
