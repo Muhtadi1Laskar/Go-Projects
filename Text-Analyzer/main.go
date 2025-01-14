@@ -36,7 +36,7 @@ func countLetters(text string) int {
 	count := 0
 
 	for _, char := range text {
-		if unicode.IsLetter(char) {
+		if unicode.IsLetter(char) && !isWhiteSpace(char) {
 			count++
 		}
 	}
