@@ -2,46 +2,96 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
+	"bufio"
 )
 
-func count(text, operation string) int {
-	operation = strings.ToLower(operation)
-	var result []string
 
+func countWords(text string) int {
+	return len(strings.Fields(text))
+}
+
+func countCharacters(text string) int {
+	count := 0
+
+	for _, char := range text {
+		if !isWhiteSpace(char) {
+			count++;
+		}
+	}
+	return count
+}
+
+func countSentences(text string) int {
+	count := 0
+	sentenceDelimeters := map[rune]bool {
+		'.': true,
+		'!': true,
+		'?': true,
+	}
+	insideSentence := false
+
+	for _, char := range text {
+		if sentenceDelimeters[char] {
+			if insideSentence {
+				count++
+				insideSentence = false
+			}
+		} else if !isWhiteSpace(char) {
+			insideSentence = true
+		}
+	}
+	return count
+}
+
+func isWhiteSpace(char rune) bool {
+	return char == ' ' || char == '\n' || char == '\t'
+}
+
+func count(text, operation string) int {
+	text = strings.TrimSpace(text)
+	operation = strings.ToLower(operation)
+	
 	switch operation {
 		case "word-count":
-			result = tokenize(text, " ")
+			return countWords(text)
 		case "character-count":
-			text = strings.Join(strings.Fields(text), "")
-			result = tokenize(text, "")
+			return countCharacters(text)
 		case "sentence-count":
-			result = tokenize(text, ".")
+			return countSentences(text)
 		default:
 			return -1
 	}
-
-	return len(result)
 }
 
-func tokenize(text string, separator string) []string {
-	text = strings.Trim(text, " ")
-	return strings.Split(strings.ToLower(text), separator)
+func readFile(PATH string) (string, error) {
+	var builder strings.Builder
+
+	file, err := os.Open(PATH)
+	if err != nil {
+		return "", fmt.Errorf("failed to open the file: %v/n", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		builder.WriteString(scanner.Text())
+		builder.WriteString("\n")
+	}
+
+	if err := scanner.Err(); err != nil {
+		return "", fmt.Errorf("error while reading file: %v", err)
+	}
+
+	return builder.String(), nil
 }
 
 func main() {
-var data string = `But as I walked down the steps I saw that the evening was not quite
-over.Fifty feet from the door a dozen headlights illuminated a
-bizarre and tumultuous scene. In the ditch beside the road, right side
-up, but violently shorn of one wheel, rested a new coupé which had
-left Gatsby’s drive not two minutes before. The sharp jut of a wall
-accounted for the detachment of the wheel, which was now getting
-considerable attention from half a dozen curious chauffeurs. However,
-as they had left their cars blocking the road, a harsh, discordant din
-from those in the rear had been audible for some time, and added to
-the already violent confusion of the scene.`
+	var path string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Plagrism-Checker/document1.txt"
+	data, _ := readFile(path)
 
-	fmt.Println(count(data, "word-count"))
-	fmt.Println(count(data, "character-count"))
-	fmt.Println(count(data, "sentence-count"))
+	fmt.Println("Word Count:", count(data, "word-count"))
+	fmt.Println("Character Count:", count(data, "character-count"))
+	fmt.Println("Sentence Count:", count(data, "sentence-count"))
 }
