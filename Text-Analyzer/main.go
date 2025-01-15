@@ -45,23 +45,23 @@ func countLetters(text string) int {
 
 func countSentences(text string) int {
 	count := 0
-	sentenceDelimeters := map[rune]bool{
-		'.': true,
-		'!': true,
-		'?': true,
-	}
 	insideSentence := false
 
 	for _, char := range text {
-		if sentenceDelimeters[char] {
+		if char == '.' || char == '?' || char == '!' {
 			if insideSentence {
 				count++
 				insideSentence = false
 			}
-		} else if !isWhiteSpace(char) {
+		} else if char == ' ' || char == '\n' || char == '\t' {
 			insideSentence = true
 		}
 	}
+
+	if insideSentence {
+		count++
+	}
+
 	return count
 }
 
