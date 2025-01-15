@@ -16,6 +16,8 @@ var stopWordsSet = map[string]struct{}{
 	"couldve": {}, "couldnt": {}, "wouldnt": {}, "shouldnt": {}, "wasnt": {}, "wont": {}, "shallnt": {}, "didnt": {}, "weev": {}, "im": {},
 }
 
+var BASE_PATH string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Text-Analyzer/"
+
 func countWords(text string) int {
 	text = strings.TrimSpace(text)
 	return len(strings.Fields(text))
@@ -99,9 +101,7 @@ func removePunctuation(text string) string {
 }
 
 func calculateFreq(text string) map[string]int {
-	formattedStr := removePunctuation(text)
-	words := tokenize(formattedStr)
-	words = removeStopWords(words)
+	words := cleanText(text)
 	frequency := make(map[string]int)
 
 	for _, word := range words {
@@ -111,11 +111,23 @@ func calculateFreq(text string) map[string]int {
 }
 
 func tokenize(text string) []string {
-	formattedStr := strings.ToLower(text)
-	words := strings.FieldsFunc(formattedStr, func(char rune) bool {
-		return !unicode.IsLetter(char) && !unicode.IsNumber(char)
-	})
-	return words
+	var tokens []string
+	var wordBuilder strings.Builder
+
+	for _, char := range text {
+		if unicode.IsLetter(char) || unicode.IsNumber(char) {
+			wordBuilder.WriteRune(unicode.ToLower(char))
+		} else if wordBuilder.Len() > 0 {
+			tokens = append(tokens, wordBuilder.String())
+			wordBuilder.Reset()
+		}
+	}
+
+	if wordBuilder.Len() > 0 {
+		tokens = append(tokens, wordBuilder.String())
+	}
+
+	return tokens
 }
 
 func removeStopWords(text []string) []string {
@@ -176,8 +188,53 @@ func averageWordLenght(data string) float64 {
 	return float64(count(data, "letter-count") / count(data, "word-count"))
 }
 
+func loadWords(filePath string) map[string]bool {
+	data, _ := readFile(filePath)
+	wordMap := make(map[string]bool)
+
+	words := strings.Split(strings.TrimSpace(data), ",")
+
+	for _, word := range words {
+		wordMap[strings.ToLower(strings.TrimSpace(word))] = true
+	}
+	return wordMap
+}
+
+func sentimentAnalysis(text string) string {
+	positiveMap := loadWords(BASE_PATH + "Data/positiveWords.txt")
+	negativeMap := loadWords(BASE_PATH + "Data/negativeWords.txt")
+	tokens := tokenize(text)
+	positiveCount, negativeCount := 0, 0
+
+	for _, token := range tokens {
+		if positiveMap[token] {
+			positiveCount++
+		} else if negativeMap[token] {
+			negativeCount++
+		}
+	}
+
+	fmt.Println(positiveCount, negativeCount)
+
+	if positiveCount > negativeCount {
+		return "The given text is positive"
+	} else if positiveCount < negativeCount {
+		return "The given text is negative"
+	} else {
+		return "The text is neutral"
+	}
+}
+
+func cleanText(text string) []string {
+	formattedStr := removePunctuation(text)
+	allWords := tokenize(formattedStr)
+	words := removeStopWords(allWords)
+
+	return words
+}
+
 func main() {
-	var path string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects/Text-Analyzer/text.txt"
+	var path string = BASE_PATH + "Data/text.txt"
 	data, _ := readFile(path)
 	freq := calculateFreq(data)
 
@@ -192,4 +249,7 @@ func main() {
 	for key, value := range freq {
 		fmt.Println(key, value)
 	}
+
+	fmt.Println(sentimentAnalysis(data))
+	fmt.Println(tokenize(data))
 }
