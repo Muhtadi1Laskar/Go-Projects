@@ -123,27 +123,27 @@ func createVector(allWords []string, freqMap map[string]int) []float64 {
 	return vector
 }
 
-func main() {
-	var rootPath string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects"
-	documentOne, _ := readFile(rootPath + "/Plagrism-Checker/document1.txt")
-	documentTwo, _ := readFile(rootPath + "/Plagrism-Checker/document2.txt")
+// func main() {
+// 	var rootPath string = "C:/Users/SYSNET/OneDrive/Documents/Coding/Golang/projects"
+// 	documentOne, _ := readFile(rootPath + "/Plagrism-Checker/document1.txt")
+// 	documentTwo, _ := readFile(rootPath + "/Plagrism-Checker/document2.txt")
 
-	// Preprocess the texts
-	words1 := preprocessText(documentOne)
-	words2 := preprocessText(documentTwo)
+// 	// Preprocess the texts
+// 	words1 := preprocessText(documentOne)
+// 	words2 := preprocessText(documentTwo)
 
-	// Create word frequency maps
-	freqMap1 := createFrequencyMap(words1)
-	freqMap2 := createFrequencyMap(words2)
+// 	// Create word frequency maps
+// 	freqMap1 := createFrequencyMap(words1)
+// 	freqMap2 := createFrequencyMap(words2)
 
-	// Get all unique words
-	allWords := getAllWords(freqMap1, freqMap2)
+// 	// Get all unique words
+// 	allWords := getAllWords(freqMap1, freqMap2)
 
-	// Create vectors
-	vector1 := createVector(allWords, freqMap1)
-	vector2 := createVector(allWords, freqMap2)
+// 	// Create vectors
+// 	vector1 := createVector(allWords, freqMap1)
+// 	vector2 := createVector(allWords, freqMap2)
 
-	// Calculate cosine similarity
-	similarity := cosineSimilaritys(vector1, vector2)
-	fmt.Printf("Similarity: %.2f\n", similarity)
-}
+// 	// Calculate cosine similarity
+// 	similarity := cosineSimilaritys(vector1, vector2)
+// 	fmt.Printf("Similarity: %.2f\n", similarity)
+// }
