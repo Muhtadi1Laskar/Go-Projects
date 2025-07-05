@@ -33,7 +33,6 @@ func (stack *Stack) Push(item int) {
 	newNode.next = stack.top
 	stack.top = newNode
 	stack.len++
-	return
 }
 
 func (stack *Stack) Pop() int {
