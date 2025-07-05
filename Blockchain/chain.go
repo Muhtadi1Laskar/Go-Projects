@@ -104,6 +104,6 @@ func main() {
 	for i := 0; i < 10; i++ {
 		block := chain.MineBlock()
 
-		fmt.Printf(" Message: %s\n Index: %d\n Timestamp: %s\n Proof: %d\n Previous Hash: %s\n", block.message, block.index, block.timestamp, block.proof, block.message)
+		fmt.Printf(" Message: %s\n Index: %d\n Timestamp: %s\n Proof: %d\n Previous Hash: %s\n", block.message, block.index, block.timestamp, block.proof, block.previousHash)
 	}
 }
