@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"math/rand"
 )
 
 type Block struct {
@@ -19,11 +20,11 @@ type Block struct {
 
 type Chain struct {
 	chain     []*Block
-	validator map[string]int
+	validators map[string]int
 }
 
 func newBlockChain() *Chain {
-	c := &Chain{validator: make(map[string]int)}
+	c := &Chain{validators: make(map[string]int)}
 	c.chain = append(c.chain, c.genesisBlock())
 	c.chain = append(c.chain, c.genesisBlock())
 	return c
@@ -43,7 +44,36 @@ func (chain *Chain) genesisBlock() *Block {
 }
 
 func (chain *Chain) addValidators(name string, stake int) {
-	chain.validator[name] = stake
+	chain.validators[name] = stake
+}
+
+func (chain *Chain) selectValidator() string {
+	var (
+		names []string
+		stakes []int
+		total int
+	)
+
+	for name, stake := range chain.validators {
+		names = append(names, name)
+		stakes = append(stakes, stake)
+		total += stake
+	}
+
+	if total == 0 {
+		return "Network"
+	}
+
+	r := rand.Intn(int(total))
+	cumulative := 0
+	for i, w := range stakes {
+		cumulative += w
+		if r < cumulative {
+			return names[i]
+		}
+	}
+
+	return " "
 }
 
 func (chain *Chain) hashBlock(block *Block) string {
@@ -67,10 +97,11 @@ func main() {
 	blockChain := newBlockChain()
 
 	blockChain.addValidators("Saitama", 20)
-	blockChain.addValidators("Genos", 30)
+	blockChain.addValidators("Genos", 70)
 	blockChain.addValidators("King", 60)
 
-	fmt.Println(blockChain.validator)
+	// fmt.Println(blockChain.validator)
+	fmt.Println(blockChain.selectValidator())
 
 	for _, value := range blockChain.chain {
 		fmt.Printf("%+v\n\n", value)
