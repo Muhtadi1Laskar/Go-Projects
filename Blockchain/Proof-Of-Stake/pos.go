@@ -76,6 +76,25 @@ func (chain *Chain) selectValidator() string {
 	return " "
 }
 
+func (chain *Chain) addBlock(data string) *Block {
+	validator := chain.selectValidator()
+	lastBlock := chain.chain[len(chain.chain)-1]
+	newBlock := &Block{
+		index: len(chain.chain),
+		timeStamp: time.Now().Format(time.RFC3339),
+		data: data,
+		previousHash: lastBlock.hash,
+		validator: validator,
+	}
+	newBlock.hash = chain.hashBlock(newBlock)
+
+	chain.chain = append(chain.chain, newBlock)
+
+	fmt.Println("✅ Block added by: ", validator)
+
+	return newBlock
+}
+
 func (chain *Chain) hashBlock(block *Block) string {
 	record := strconv.Itoa(block.index) + block.data + block.timeStamp + block.previousHash
 	hash := computeHash(record)
