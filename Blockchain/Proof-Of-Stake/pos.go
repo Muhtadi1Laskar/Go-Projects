@@ -4,9 +4,9 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
+	"math/rand"
 	"strconv"
 	"time"
-	"math/rand"
 )
 
 type Block struct {
@@ -25,7 +25,6 @@ type Chain struct {
 
 func newBlockChain() *Chain {
 	c := &Chain{validators: make(map[string]int)}
-	c.chain = append(c.chain, c.genesisBlock())
 	c.chain = append(c.chain, c.genesisBlock())
 	return c
 }
@@ -101,6 +100,22 @@ func (chain *Chain) hashBlock(block *Block) string {
 	return hash
 }
 
+func (chain *Chain) print() string {
+	var result string
+	for _, value := range chain.chain {
+		hashPrefix := value.hash
+		if len(hashPrefix) > 10 {
+			hashPrefix = hashPrefix[:10]
+		}
+		result += fmt.Sprintf("Block #%d | Validator: %s | Hash: %s...\n", 
+			value.index,
+			value.validator, 
+			hashPrefix)
+	}
+	return result
+}
+
+
 func computeHash(data string) string {
 	byteMessage := []byte(data)
 	hash := sha512.New()
@@ -115,14 +130,14 @@ func computeHash(data string) string {
 func main() {
 	blockChain := newBlockChain()
 
-	blockChain.addValidators("Saitama", 20)
-	blockChain.addValidators("Genos", 70)
-	blockChain.addValidators("King", 60)
+	blockChain.addValidators("Saitama", 70)
+	blockChain.addValidators("Genos", 60)
+	blockChain.addValidators("King", 20)
 
-	// fmt.Println(blockChain.validator)
-	fmt.Println(blockChain.selectValidator())
-
-	for _, value := range blockChain.chain {
-		fmt.Printf("%+v\n\n", value)
+	for i := range 10 {
+		blockChain.addBlock("Transcations: " + strconv.Itoa(i))
 	}
+
+	fmt.Print("\n📦 Blockchain State:\n")
+	fmt.Println(blockChain.print())
 }
