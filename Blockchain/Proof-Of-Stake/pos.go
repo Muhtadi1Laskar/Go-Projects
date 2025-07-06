@@ -31,11 +31,11 @@ func newBlockChain() *Chain {
 
 func (chain *Chain) genesisBlock() *Block {
 	var block *Block = &Block{
-		index: 0,
-		timeStamp: time.Now().Format(time.RFC3339),
-		data: "Genesis Block",
+		index:        0,
+		timeStamp:    time.Now().Format(time.RFC3339),
+		data:         "Genesis Block",
 		previousHash: "0",
-		validator: "Network",
+		validator:    "Network",
 	}
 	block.hash = chain.hashBlock(block)
 
@@ -63,6 +63,6 @@ func main() {
 	blockChain := newBlockChain()
 
 	for _, value := range blockChain.chain {
-		fmt.Printf("%+v\n\n", value)	
+		fmt.Printf("%+v\n\n", value)
 	}
 }
