@@ -23,7 +23,7 @@ type Chain struct {
 }
 
 func newBlockChain() *Chain {
-	c := &Chain{}
+	c := &Chain{validator: make(map[string]int)}
 	c.chain = append(c.chain, c.genesisBlock())
 	c.chain = append(c.chain, c.genesisBlock())
 	return c
@@ -40,6 +40,10 @@ func (chain *Chain) genesisBlock() *Block {
 	block.hash = chain.hashBlock(block)
 
 	return block
+}
+
+func (chain *Chain) addValidators(name string, stake int) {
+	chain.validator[name] = stake
 }
 
 func (chain *Chain) hashBlock(block *Block) string {
@@ -61,6 +65,12 @@ func computeHash(data string) string {
 
 func main() {
 	blockChain := newBlockChain()
+
+	blockChain.addValidators("Saitama", 20)
+	blockChain.addValidators("Genos", 30)
+	blockChain.addValidators("King", 60)
+
+	fmt.Println(blockChain.validator)
 
 	for _, value := range blockChain.chain {
 		fmt.Printf("%+v\n\n", value)
