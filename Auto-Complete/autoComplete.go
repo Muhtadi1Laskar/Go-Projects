@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Node struct {
@@ -42,6 +43,28 @@ func (bst *Tree) insertHelper(currentNode *Node, data string) {
 	}
 }
 
+func (bst *Tree) autoComplete(prefix string) []string {
+	var result []string
+	var traverse func(n *Node)
+	traverse = func(n *Node) {
+		if n == nil {
+			return
+		}
+
+		if strings.HasPrefix(n.value, prefix) {
+			traverse(n.left)
+			result = append(result, n.value)
+			traverse(n.right)
+		} else if n.value > prefix {
+			traverse(n.left)
+		} else {
+			traverse(n.right)
+		}
+	}
+	traverse(bst.root)
+	return result
+}
+
 func (bst *Tree) iterativeDFS() []string {
 	var result []string
 	var stack []*Node
@@ -71,4 +94,6 @@ func main() {
 	}
 
 	fmt.Println(tree.iterativeDFS())
+
+	fmt.Println(tree.autoComplete("c"))
 }
