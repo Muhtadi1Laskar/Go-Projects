@@ -42,6 +42,22 @@ func (bst *Tree) insertHelper(node *Node, data map[string]string) {
 	}
 }
 
+func (bst *Tree) search(name string) string {
+	var current_node = bst.root
+
+	for current_node != nil {
+		if current_node.value["name"] > name {
+			current_node = current_node.left
+		} else if current_node.value["name"] < name {
+			current_node = current_node.right
+		} else {
+			var value, _ = current_node.value["number"]
+			return value
+		}
+	}
+	return "There is no contact with the name " + name
+}
+
 func (bst *Tree) traverse_in_order() {
 	var walk func(node *Node)
 	walk = func(node *Node) {
@@ -75,5 +91,9 @@ func main() {
 		tree.insert(data)
 	}
 
+	
+	tree.insert(map[string]string{ "name": "Nami", "number": "23445422678" })
 	tree.traverse_in_order()
+
+	fmt.Println(tree.search("Nami"))
 }
