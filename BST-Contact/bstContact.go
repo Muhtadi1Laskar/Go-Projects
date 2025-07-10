@@ -27,7 +27,7 @@ func (bst *Tree) insert(data map[string]string) {
 }
 
 func (bst *Tree) insertHelper(node *Node, data map[string]string) {
-	if node.value["name"] < data["name"] {
+	if node.value["name"] > data["name"] {
 		if node.left == nil {
 			node.left = &Node{value: data}
 		} else {
@@ -40,6 +40,18 @@ func (bst *Tree) insertHelper(node *Node, data map[string]string) {
 			bst.insertHelper(node.right, data)
 		}
 	}
+}
+
+func (bst *Tree) traverse_in_order() {
+	var walk func(node *Node)
+	walk = func(node *Node) {
+		if node != nil {
+			walk(node.left)
+			fmt.Println(node.value)
+			walk(node.right)
+		}
+	}
+	walk(bst.root)
 }
 
 func main() {
@@ -63,5 +75,5 @@ func main() {
 		tree.insert(data)
 	}
 
-	fmt.Println(tree.root)
+	tree.traverse_in_order()
 }
