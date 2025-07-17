@@ -20,14 +20,33 @@ func readWordList(filePath string) ([]string, error) {
 	return lines, nil
 }
 
-// Converts a byte slice to a binary string
 func bytesToBits(data []byte) string {
-	var bits strings.Builder
+	bits := make([]byte, 0, len(data) * 8)
 	for _, b := range data {
-		bits.WriteString(fmt.Sprintf("%08b", b))
+		bits = append(bits, bitToChar(b>>7))
+		bits = append(bits, bitToChar(b>>6))
+		bits = append(bits, bitToChar(b>>5))
+		bits = append(bits, bitToChar(b>>4))
+		bits = append(bits, bitToChar(b>>3))
+		bits = append(bits, bitToChar(b>>2))
+		bits = append(bits, bitToChar(b>>1))
+		bits = append(bits, bitToChar(b))
 	}
-	return bits.String()
+	return string(bits)
 }
+
+func bitToChar(b byte) byte {
+	return '0' + (b & 1)
+}
+
+// Converts a byte slice to a binary string
+// func bytesToBits(data []byte) string {
+// 	var bits strings.Builder
+// 	for _, b := range data {
+// 		bits.WriteString(fmt.Sprintf("%08b", b))
+// 	}
+// 	return bits.String()
+// }
 
 func main() {
 	wordlist, _ := readWordList("C:/Users/laska/OneDrive/Documents/Coding/Golang/Go-Projects/BIP-39/bip-39-words.txt")
@@ -42,7 +61,7 @@ func main() {
 	// Step 2: Compute checksum (first N bits of SHA256(entropy), N = ENT / 32)
 	hash := sha256.Sum256(entropy)
 	entropyBits := bytesToBits(entropy)
-	checksumBits := fmt.Sprintf("%08b", hash[0])[:4] // 128 bits → 4-bit checksum
+	checksumBits := bytesToBits([]byte{hash[0]})[:4] // 128 bits → 4-bit checksum
 
 	// Step 3: Concatenate entropy + checksum
 	fullBits := entropyBits + checksumBits
