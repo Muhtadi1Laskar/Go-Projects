@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 )
@@ -39,8 +41,16 @@ func bitToChar(b byte) byte {
 	return '0' + (b & 1)
 }
 
+func getTxtFilePath() string {
+	_, filename, _, _ := runtime.Caller(0)
+	dir := filepath.Dir(filename)
+	return filepath.Join(dir, "./bip-39-words.txt")
+}
+
 func main() {
-	wordlist, _ := readWordList("C:/Users/laska/OneDrive/Documents/Coding/Golang/Go-Projects/BIP-39/bip-39-words.txt")
+	filePath := getTxtFilePath()
+
+	wordlist, _ := readWordList(filePath)
 
 	// Step 1: Generate 128-bit entropy (16 bytes for 12 words)
 	entropy := make([]byte, 16)
