@@ -3,46 +3,61 @@ package main
 import (
 	"crypto/rand"
 	"crypto/sha256"
-	"encoding/hex"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
+	"strconv"
 	"strings"
 )
 
-func readWordList(filePath string) []string {
-	data, err := ioutil.ReadFile(filePath)
+// Reads the BIP-39 English wordlist from a file
+func readWordList(filePath string) ([]string, error) {
+	data, err := os.ReadFile(filePath) // ioutil.ReadFile is deprecated
 	if err != nil {
-		log.Fatalf("Failed to read wordlist: %v", err)
+		return nil, fmt.Errorf("failed to read wordlist: %w", err)
 	}
-	return strings.Split(strings.TrimSpace(string(data)), "\n")
+	lines := strings.Split(strings.ReplaceAll(string(data), "\r\n", "\n"), "\n")
+	return lines, nil
 }
 
-func hashBytes(data []byte) []byte {
-	hash := sha256.New()
-	hash.Write(data)
-
-	hashedBytes := hash.Sum(nil)
-	return hashedBytes
+// Converts a byte slice to a binary string
+func bytesToBits(data []byte) string {
+	var bits strings.Builder
+	for _, b := range data {
+		bits.WriteString(fmt.Sprintf("%08b", b))
+	}
+	return bits.String()
 }
 
 func main() {
-	var total int = 16
+	wordlist, _ := readWordList("C:/Users/laska/OneDrive/Documents/Coding/Golang/Go-Projects/BIP-39/bip-39-words.txt")
 
-	var randomBytes []byte = make([]byte, total)
-
-	_, err := rand.Read(randomBytes)
+	// Step 1: Generate 128-bit entropy (16 bytes for 12 words)
+	entropy := make([]byte, 16)
+	_, err := rand.Read(entropy)
 	if err != nil {
-		log.Fatal("Error while generating random number", err)
+		log.Fatalf("Entropy generation failed: %v", err)
 	}
 
-	hashedBytes := hashBytes(randomBytes)
-	firstByte := randomBytes[0]
-	first4Bits := firstByte >> 4
+	// Step 2: Compute checksum (first N bits of SHA256(entropy), N = ENT / 32)
+	hash := sha256.Sum256(entropy)
+	entropyBits := bytesToBits(entropy)
+	checksumBits := fmt.Sprintf("%08b", hash[0])[:4] // 128 bits → 4-bit checksum
 
-	fmt.Printf("Generated Random Bytes (hex): %x\n", randomBytes)
-	fmt.Printf("Generated Random Bytes (raw): %v\n", randomBytes)
-	fmt.Printf("Generated Random Bytes (hashed raw): %v\n", hashedBytes)
-	fmt.Println(hex.EncodeToString(hashedBytes))
-	fmt.Println(first4Bits)
+	// Step 3: Concatenate entropy + checksum
+	fullBits := entropyBits + checksumBits
+
+	// Step 4: Split into 11-bit chunks and map to words
+	var mnemonic []string
+	for i := 0; i < len(fullBits); i += 11 {
+		chunk := fullBits[i : i+11]
+		index, err := strconv.ParseInt(chunk, 2, 64)
+		if err != nil {
+			log.Fatalf("Bit parsing failed: %v", err)
+		}
+		mnemonic = append(mnemonic, wordlist[index])
+	}
+
+	fmt.Println("🔐 Your 12-word mnemonic phrase:")
+	fmt.Println(strings.Join(mnemonic, " "))
 }
