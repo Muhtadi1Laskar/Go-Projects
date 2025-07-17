@@ -1,8 +1,11 @@
 package main
 
 import (
+	"golang.org/x/crypto/pbkdf2"
 	"crypto/rand"
 	"crypto/sha256"
+	"crypto/sha512"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"os"
@@ -47,6 +50,25 @@ func getTxtFilePath() string {
 	return filepath.Join(dir, "./bip-39-words.txt")
 }
 
+func encrypt(data string) {
+	password := []byte(data)
+	salt := make([]byte, 16)
+
+	_, err := rand.Read(salt)
+	if err != nil {
+		log.Fatalf("Salt generation failed: %v\n", err)
+	}
+	iterations := 310000
+	keyLen := 64
+
+	derivedKey := pbkdf2.Key(password, salt, iterations, keyLen, sha512.New)
+
+	fmt.Printf("Password: %s\n", password)
+	fmt.Printf("Salt (Base64): %s\n", base64.StdEncoding.EncodeToString(salt))
+	fmt.Printf("Iterations: %d\n", iterations)
+	fmt.Printf("Derived Key (Base64): %s\n", base64.StdEncoding.EncodeToString(derivedKey))
+}
+
 func main() {
 	filePath := getTxtFilePath()
 
@@ -80,4 +102,6 @@ func main() {
 
 	fmt.Println("🔐 Your 12-word mnemonic phrase:")
 	fmt.Println(strings.Join(mnemonic, " "))
+
+	encrypt(strings.Join(mnemonic, " "))
 }
