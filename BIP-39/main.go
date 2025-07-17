@@ -21,7 +21,7 @@ func readWordList(filePath string) ([]string, error) {
 }
 
 func bytesToBits(data []byte) string {
-	bits := make([]byte, 0, len(data) * 8)
+	bits := make([]byte, 0, len(data)*8)
 	for _, b := range data {
 		bits = append(bits, bitToChar(b>>7))
 		bits = append(bits, bitToChar(b>>6))
@@ -38,15 +38,6 @@ func bytesToBits(data []byte) string {
 func bitToChar(b byte) byte {
 	return '0' + (b & 1)
 }
-
-// Converts a byte slice to a binary string
-// func bytesToBits(data []byte) string {
-// 	var bits strings.Builder
-// 	for _, b := range data {
-// 		bits.WriteString(fmt.Sprintf("%08b", b))
-// 	}
-// 	return bits.String()
-// }
 
 func main() {
 	wordlist, _ := readWordList("C:/Users/laska/OneDrive/Documents/Coding/Golang/Go-Projects/BIP-39/bip-39-words.txt")
