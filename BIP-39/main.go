@@ -36,7 +36,7 @@ func main() {
 	fmt.Println("🔐 Your 12-word mnemonic phrase:")
 	fmt.Println(strings.Join(mnemonic, " ") + "\n")
 	fmt.Printf("🔗 Child Chain Code: %x", childChain)
-	fmt.Printf("\n🔐Private Key: %x\n", childKey)
+	fmt.Printf("\n🔐 Private Key: %x\n", childKey)
 	fmt.Printf("📍 Public Key: %x\n", publicKey)
 	fmt.Printf("📦 Address: %s\n", address)
 }
