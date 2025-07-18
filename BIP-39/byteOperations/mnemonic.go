@@ -8,7 +8,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
 )
 
 func ReadWordList(filePath string) ([]string, error) {
@@ -44,7 +43,7 @@ func generateEntropy() ([]byte, error) {
 	entropy := make([]byte, 16)
 	_, err := rand.Read(entropy)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to generate entropy: %v\n", err)
+		return nil, fmt.Errorf("failed to generate entropy: %v", err)
 	}
 	return entropy, nil
 }
@@ -52,7 +51,7 @@ func generateEntropy() ([]byte, error) {
 func GeneratePhrase(filePath string) []string {
 	wordList, _ := ReadWordList(filePath)
 	entropy, _ := generateEntropy()
-	
+
 	hash := sha256.Sum256(entropy)
 	entropyBits := BytesToBits(entropy)
 	checkSumBits := BytesToBits([]byte{hash[0]})[:4]
