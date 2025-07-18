@@ -16,6 +16,7 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 )
 
+
 // Reads the BIP-39 English wordlist from a file
 func readWordList(filePath string) ([]string, error) {
 	data, err := os.ReadFile(filePath) // ioutil.ReadFile is deprecated
@@ -114,6 +115,14 @@ func main() {
 	fmt.Println(strings.Join(mnemonic, " "))
 
 	var seed []byte = generateSeed(strings.Join(mnemonic, " "), "hello90world")
+	masterKey, masterChain := generateMasterKey(seed)
+	childIndex := uint32(0x80000000)
 
-	fmt.Println(generateMasterKey(seed))
+	childKey, childChain, err := DeriveHardenedChild(masterKey, masterChain, childIndex)
+	if err != nil {
+		log.Fatalf("Child derivation failed: %v", err)
+	}
+
+	fmt.Printf("\n🔐 Child Private Key: %x\n", childKey)
+	fmt.Printf("🔗 Child Chain Code: %x\n", childChain)
 }
