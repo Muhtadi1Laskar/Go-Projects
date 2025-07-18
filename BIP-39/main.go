@@ -11,7 +11,6 @@ import (
 
 	"bip-39/KeyOperations"
 	"bip-39/byteOperations"
-	"golang.org/x/crypto/pbkdf2"
 )
 
 func getTxtFilePath() string {
@@ -20,15 +19,6 @@ func getTxtFilePath() string {
 	return filepath.Join(dir, "./bip-39-words.txt")
 }
 
-func generateSeed(mnemonic, password string) []byte {
-	salt := "mnemonic" + password
-	iterations := 2048
-	keyLen := 64
-	passwordBytes := []byte(mnemonic)
-	saltBytes := []byte(salt)
-
-	return pbkdf2.Key(passwordBytes, saltBytes, iterations, keyLen, sha512.New)
-}
 
 func hmacSha512(seed []byte) []byte {
 	secretKey := []byte("Bitcoin seed")
@@ -55,7 +45,8 @@ func main() {
 	fmt.Println("🔐 Your 12-word mnemonic phrase:")
 	fmt.Println(strings.Join(mnemonic, " ") + "\n")
 
-	var seed []byte = generateSeed(strings.Join(mnemonic, " "), "hello90world")
+	var mnemonicStr string = strings.Join(mnemonic, " ")
+	var seed []byte = byteoperations.GenerateSeed(mnemonicStr, "hello90world")
 	masterKey, masterChain := generateMasterKey(seed)
 	childIndex := uint32(0x80000000)
 
