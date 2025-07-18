@@ -13,10 +13,9 @@ import (
 	"strconv"
 	"strings"
 
-	"golang.org/x/crypto/pbkdf2"
 	"bip-39/KeyOperations"
+	"golang.org/x/crypto/pbkdf2"
 )
-
 
 // Reads the BIP-39 English wordlist from a file
 func readWordList(filePath string) ([]string, error) {
@@ -65,7 +64,7 @@ func generateSeed(mnemonic, password string) []byte {
 
 func hmacSha512(seed []byte) []byte {
 	secretKey := []byte("Bitcoin seed")
-	
+
 	h := hmac.New(sha512.New, secretKey)
 	h.Write(seed)
 	hmacSum := h.Sum(nil)
@@ -77,7 +76,7 @@ func generateMasterKey(seed []byte) ([]byte, []byte) {
 	keyedHash := hmacSha512(seed)
 	IL := keyedHash[:32]
 	IR := keyedHash[32:]
-	
+
 	return IL, IR
 }
 

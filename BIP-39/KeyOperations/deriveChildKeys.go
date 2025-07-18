@@ -4,9 +4,9 @@ import (
 	"crypto/hmac"
 	"crypto/sha512"
 	"encoding/binary"
-	"math/big"
-	"github.com/btcsuite/btcd/btcec/v2"
 	"fmt"
+	"github.com/btcsuite/btcd/btcec/v2"
+	"math/big"
 )
 
 var curve = btcec.S256()
