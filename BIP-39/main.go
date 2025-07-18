@@ -112,7 +112,7 @@ func main() {
 	}
 
 	fmt.Println("🔐 Your 12-word mnemonic phrase:")
-	fmt.Println(strings.Join(mnemonic, " "))
+	fmt.Println(strings.Join(mnemonic, " ") + "\n")
 
 	var seed []byte = generateSeed(strings.Join(mnemonic, " "), "hello90world")
 	masterKey, masterChain := generateMasterKey(seed)
@@ -122,7 +122,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Child derivation failed: %v", err)
 	}
+	publicKey := keyoperations.PrivateKeyToPublicKey(childKey)
+	address := keyoperations.GenerateP2PKeyAddress(publicKey)
 
+	fmt.Printf("🔗 Child Chain Code: %x", childChain)
 	fmt.Printf("\n🔐 Child Private Key: %x\n", childKey)
-	fmt.Printf("🔗 Child Chain Code: %x\n", childChain)
+	fmt.Printf("📍 Public Key: %x\n", publicKey)
+	fmt.Printf("📦 Address: %s\n", address)
 }
