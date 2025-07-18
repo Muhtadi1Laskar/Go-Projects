@@ -2,7 +2,7 @@ package byteoperations
 
 import (
 	"crypto/sha512"
-	
+
 	"golang.org/x/crypto/pbkdf2"
 )
 
