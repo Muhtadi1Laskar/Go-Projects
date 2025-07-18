@@ -1,7 +1,7 @@
 package main
 
 import (
-	"golang.org/x/crypto/pbkdf2"
+	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha256"
 	"crypto/sha512"
@@ -12,6 +12,8 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"golang.org/x/crypto/pbkdf2"
 )
 
 // Reads the BIP-39 English wordlist from a file
@@ -56,7 +58,25 @@ func generateSeed(mnemonic, password string) []byte {
 	passwordBytes := []byte(mnemonic)
 	saltBytes := []byte(salt)
 
-	return  pbkdf2.Key(passwordBytes, saltBytes, iterations, keyLen, sha512.New)
+	return pbkdf2.Key(passwordBytes, saltBytes, iterations, keyLen, sha512.New)
+}
+
+func hmacSha512(seed []byte) []byte {
+	secretKey := []byte("Bitcoin seed")
+	
+	h := hmac.New(sha512.New, secretKey)
+	h.Write(seed)
+	hmacSum := h.Sum(nil)
+
+	return hmacSum
+}
+
+func generateMasterKey(seed []byte) ([]byte, []byte) {
+	keyedHash := hmacSha512(seed)
+	IL := keyedHash[:32]
+	IR := keyedHash[32:]
+	
+	return IL, IR
 }
 
 func main() {
@@ -95,5 +115,5 @@ func main() {
 
 	var seed []byte = generateSeed(strings.Join(mnemonic, " "), "hello90world")
 
-	fmt.Println(seed)
+	fmt.Println(generateMasterKey(seed))
 }
