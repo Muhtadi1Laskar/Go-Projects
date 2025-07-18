@@ -50,7 +50,7 @@ func getTxtFilePath() string {
 }
 
 func generateSeed(mnemonic, password string) []byte {
-	salt := mnemonic + password
+	salt := "mnemonic" + password
 	iterations := 2048
 	keyLen := 64
 	passwordBytes := []byte(mnemonic)
