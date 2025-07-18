@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"crypto/sha512"
-	"encoding/base64"
 	"fmt"
 	"log"
 	"os"
@@ -50,23 +49,14 @@ func getTxtFilePath() string {
 	return filepath.Join(dir, "./bip-39-words.txt")
 }
 
-func encrypt(data string) {
-	password := []byte(data)
-	salt := make([]byte, 16)
-
-	_, err := rand.Read(salt)
-	if err != nil {
-		log.Fatalf("Salt generation failed: %v\n", err)
-	}
-	iterations := 310000
+func generateSeed(mnemonic, password string) []byte {
+	salt := mnemonic + password
+	iterations := 2048
 	keyLen := 64
+	passwordBytes := []byte(mnemonic)
+	saltBytes := []byte(salt)
 
-	derivedKey := pbkdf2.Key(password, salt, iterations, keyLen, sha512.New)
-
-	fmt.Printf("Password: %s\n", password)
-	fmt.Printf("Salt (Base64): %s\n", base64.StdEncoding.EncodeToString(salt))
-	fmt.Printf("Iterations: %d\n", iterations)
-	fmt.Printf("Derived Key (Base64): %s\n", base64.StdEncoding.EncodeToString(derivedKey))
+	return  pbkdf2.Key(passwordBytes, saltBytes, iterations, keyLen, sha512.New)
 }
 
 func main() {
@@ -103,5 +93,7 @@ func main() {
 	fmt.Println("🔐 Your 12-word mnemonic phrase:")
 	fmt.Println(strings.Join(mnemonic, " "))
 
-	encrypt(strings.Join(mnemonic, " "))
+	var seed []byte = generateSeed(strings.Join(mnemonic, " "), "hello90world")
+
+	fmt.Println(seed)
 }
