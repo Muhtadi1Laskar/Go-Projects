@@ -1,4 +1,4 @@
-package main
+package keyoperations
 
 import (
 	"crypto/hmac"
@@ -18,7 +18,7 @@ func uint32ToBytes(i uint32) []byte {
 	return b
 }
 
-func DeriveHardenedChild(parentPrivKey, parentChainCode []byte, index uint32) ([]byte, []byte, error) {
+func DeriveHardenedChilds(parentPrivKey, parentChainCode []byte, index uint32) ([]byte, []byte, error) {
 	if index < 0x80000000 {
 		return nil, nil, fmt.Errorf("index must be >= 0x80000000 for hardened derivation")
 	}

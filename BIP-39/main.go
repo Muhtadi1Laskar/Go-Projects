@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"golang.org/x/crypto/pbkdf2"
+	"bip-39/KeyOperations"
 )
 
 
@@ -118,7 +119,7 @@ func main() {
 	masterKey, masterChain := generateMasterKey(seed)
 	childIndex := uint32(0x80000000)
 
-	childKey, childChain, err := DeriveHardenedChild(masterKey, masterChain, childIndex)
+	childKey, childChain, err := keyoperations.DeriveHardenedChilds(masterKey, masterChain, childIndex)
 	if err != nil {
 		log.Fatalf("Child derivation failed: %v", err)
 	}
