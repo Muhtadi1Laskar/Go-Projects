@@ -21,9 +21,9 @@ func getTxtFilePath() string {
 func main() {
 	filePath := getTxtFilePath()
 	mnemonic := byteoperations.GeneratePhrase(filePath)
+	var mnemonicStr string = strings.Join(mnemonic, " ")
 
 	const password string = "Hello890World"
-	var mnemonicStr string = strings.Join(mnemonic, " ")
 	var seed []byte = byteoperations.GenerateSeed(mnemonicStr, password)
 	masterKey, masterChain := keyoperations.GenerateMasterKey(seed)
 	childIndex := uint32(0x80000000)
