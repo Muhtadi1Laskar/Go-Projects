@@ -34,7 +34,6 @@ func checkSum(data []byte) []byte {
 
 func base58CheckEncode(data []byte) string {
 	ck := checkSum(data)
-	
 	full := append(data, ck...)
 	return base58.Encode(full)
 }
