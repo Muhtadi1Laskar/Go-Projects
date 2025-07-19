@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strings"
 
+	"bip-39/Cipher"
 	"bip-39/KeyOperations"
 	"bip-39/byteOperations"
 )
@@ -33,10 +34,16 @@ func main() {
 	publicKey := keyoperations.PrivateKeyToPublicKey(childKey)
 	address := keyoperations.GenerateP2PKeyAddress(publicKey)
 
+	encryptedPrivateKey, _ := ciphers.AESEncrypt("hello90world", string(childKey))
+	decryptedPrivateKey, _ := ciphers.AESDecrypt(encryptedPrivateKey, string(childKey))
+
 	fmt.Println("🔐 Your 12-word mnemonic phrase:")
 	fmt.Println(strings.Join(mnemonic, " ") + "\n")
 	fmt.Printf("🔗 Child Chain Code: %x", childChain)
 	fmt.Printf("\n🔐 Private Key: %x\n", childKey)
 	fmt.Printf("📍 Public Key: %x\n", publicKey)
 	fmt.Printf("📦 Address: %s\n", address)
+
+	fmt.Printf("\nEncrypted Private Key: %s\n", encryptedPrivateKey)
+	fmt.Printf("Decrypted Private Key: %s\n", decryptedPrivateKey)
 }
