@@ -22,8 +22,9 @@ func main() {
 	filePath := getTxtFilePath()
 	mnemonic := byteoperations.GeneratePhrase(filePath)
 
+	const password string = "Hello890World"
 	var mnemonicStr string = strings.Join(mnemonic, " ")
-	var seed []byte = byteoperations.GenerateSeed(mnemonicStr, "hell0o90world")
+	var seed []byte = byteoperations.GenerateSeed(mnemonicStr, password)
 	masterKey, masterChain := keyoperations.GenerateMasterKey(seed)
 	childIndex := uint32(0x80000000)
 
@@ -34,8 +35,9 @@ func main() {
 	publicKey := keyoperations.PrivateKeyToPublicKey(childKey)
 	address := keyoperations.GenerateP2PKeyAddress(publicKey)
 
-	encryptedPrivateKey, _ := ciphers.AESEncrypt("hello90world", string(childKey))
-	decryptedPrivateKey, _ := ciphers.AESDecrypt(encryptedPrivateKey, string(childKey))
+	aesKey := ciphers.DeriveAESKey(password)
+	encryptedPrivateKey, _ := ciphers.AESEncrypt(password, aesKey)
+	decryptedPrivateKey, _ := ciphers.AESDecrypt(encryptedPrivateKey, aesKey)
 
 	fmt.Println("🔐 Your 12-word mnemonic phrase:")
 	fmt.Println(strings.Join(mnemonic, " ") + "\n")
