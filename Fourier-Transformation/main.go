@@ -2,11 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"math/cmplx"
+	"os"
+	"path/filepath"
+	"runtime"
+
+	"github.com/faiface/beep/wav"
 )
 
-func dft(signal []float32) []complex128 {
+func Dft(signal []float32) []complex128 {
 	var N int = len(signal)
 	var result = make([]complex128, N)
 
@@ -22,9 +28,26 @@ func dft(signal []float32) []complex128 {
 	return result
 }
 
-func main() {
-	var samples []float32 = []float32{1.0, 0.0, -1.0, 0.0}
-	spectrum  := dft(samples)
+func getFilePath() string {
+	_, filename, _, _ := runtime.Caller(0)
+	dir := filepath.Dir(filename)
+	return filepath.Join(dir, "./sounds/sample.wav")
+}
 
-	fmt.Println(spectrum)
+func main() {
+	path := getFilePath()
+	f, err := os.Open(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	streamer, format, err := wav.Decode(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer streamer.Close()
+
+	fmt.Println(streamer)
+	fmt.Println(format)
 }
