@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/faiface/beep"
 	"github.com/faiface/beep/wav"
 )
 
@@ -43,15 +44,20 @@ func readAudioFile(path string) *os.File {
 	return f
 }
 
+func decodeAudio(f *os.File) (beep.StreamSeekCloser, beep.Format) {
+	streamer, format, err := wav.Decode(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return streamer, format
+}
+
 func main() {
 	path := getFilePath()
 	f := readAudioFile(path)
 	defer f.Close()
 
-	streamer, format, err := wav.Decode(f)
-	if err != nil {
-		log.Fatal(err)
-	}
+	streamer, format := decodeAudio(f)
 	defer streamer.Close()
 
 	fmt.Println(streamer)
