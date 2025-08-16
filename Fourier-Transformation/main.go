@@ -40,7 +40,6 @@ func readAudioFile(path string) *os.File {
 		log.Fatal(err)
 		os.Exit(0)
 	}
-	// defer f.Close()
 	return f
 }
 
