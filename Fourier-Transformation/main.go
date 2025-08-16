@@ -12,6 +12,12 @@ import (
 	"github.com/faiface/beep/wav"
 )
 
+func getFilePath() string {
+	_, filename, _, _ := runtime.Caller(0)
+	dir := filepath.Dir(filename)
+	return filepath.Join(dir, "./sounds/sample.wav")
+}
+
 func Dft(signal []float32) []complex128 {
 	var N int = len(signal)
 	var result = make([]complex128, N)
@@ -28,18 +34,19 @@ func Dft(signal []float32) []complex128 {
 	return result
 }
 
-func getFilePath() string {
-	_, filename, _, _ := runtime.Caller(0)
-	dir := filepath.Dir(filename)
-	return filepath.Join(dir, "./sounds/sample.wav")
+func readAudioFile(path string) *os.File {
+	f, err := os.Open(path)
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(0)
+	}
+	// defer f.Close()
+	return f
 }
 
 func main() {
 	path := getFilePath()
-	f, err := os.Open(path)
-	if err != nil {
-		log.Fatal(err)
-	}
+	f := readAudioFile(path)
 	defer f.Close()
 
 	streamer, format, err := wav.Decode(f)
