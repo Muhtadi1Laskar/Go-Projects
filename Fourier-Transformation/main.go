@@ -8,13 +8,18 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/wav"
-	"github.com/mjibson/go-dsp/fft"
 )
 
 const N = 4096
+
+type freqVal struct {
+	freq float64
+	mag float64
+}
 
 func getFilePath() string {
 	_, filename, _, _ := runtime.Caller(0)
@@ -68,6 +73,19 @@ func readSample(streamer beep.StreamSeekCloser) []float64 {
 	return samples
 }
 
+func convertToMagnitude(complexResult []complex128, format beep.Format) []freqVal {
+	var result []freqVal
+
+	for i := 0; i < len(complexResult); i++ {
+		re := real(complexResult[i])
+		im := imag(complexResult[i])
+		mag := math.Sqrt(re * re + im * im)
+		freq := float64(i) * float64(format.SampleRate) / float64(N)
+		result = append(result, freqVal{freq, mag})
+	}
+	return result
+}
+
 func main() {
 	path := getFilePath()
 	f := readAudioFile(path)
@@ -79,11 +97,13 @@ func main() {
 	samples := readSample(streamer)
 	fourier := Dft(samples)
 
-	fourier2 := fft.FFTReal(samples)
+	result := convertToMagnitude(fourier, format)
 
-	// Use the Dft result directly
-	fmt.Printf("%T\n", streamer)
-	fmt.Printf("%T\n", format)
-	fmt.Println(fourier[0])
-	fmt.Println(fourier2[0])
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].mag > result[j].mag
+	})
+
+	for i := 0; i < 50; i++ {
+		fmt.Printf("%d. %.1f Hz (mag=%.2f)\n", i+1, result[i].freq, result[i].mag)
+	}
 }
