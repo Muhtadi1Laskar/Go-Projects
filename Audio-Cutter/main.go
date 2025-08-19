@@ -26,7 +26,7 @@ func timeStringToSecond(timeStr string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	return t.Hour() * 3600 + t.Minute() * 60 + t.Second(), nil
+	return t.Hour()*3600 + t.Minute()*60 + t.Second(), nil
 }
 
 func DecodeAudioAndCutSample(filepath string, start, end int) []float64 {
