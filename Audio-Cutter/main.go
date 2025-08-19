@@ -8,7 +8,11 @@ import (
 	"runtime"
 
 	"github.com/faiface/beep/mp3"
+	"github.com/go-audio/audio"
+	"github.com/go-audio/wav"
 )
+
+const SAMPLE_RATE = 44100
 
 func getFilePath(folderName string) string {
 	_, filename, _, _ := runtime.Caller(0)
@@ -16,16 +20,14 @@ func getFilePath(folderName string) string {
 	return filepath.Join(dir, folderName)
 }
 
-func readAudioFile(filePath string) *os.File {
-	f, err := os.Open(filePath)
+func DecodeAudio(filepath string, start, end int) []float64 {
+	if start > end {
+		log.Fatal("Start cannot be greater than the End")
+	}
+	f, err := os.Open(filepath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return f
-}
-
-func DecodeAudio(filepath string, start, end int) []float64 {
-	f := readAudioFile(filepath)
 	defer f.Close()
 
 	streamer, _, err := mp3.Decode(f)
@@ -43,19 +45,49 @@ func DecodeAudio(filepath string, start, end int) []float64 {
 		}
 		samples = append(samples, float64(buf[0][0]))
 	}
-	samplesPerSecond := 44100
-	startIndex := start * samplesPerSecond
-	endIndex := end * samplesPerSecond
+	startIndex := start * SAMPLE_RATE
+	endIndex := end * SAMPLE_RATE
 	cutSamples := samples[startIndex:endIndex]
 
 	return cutSamples
 }
 
+func WriteWavFile(outPath string, cutSample []float64) {
+	f, err := os.Create(outPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	enc := wav.NewEncoder(f, SAMPLE_RATE, 16, 1, 1)
+
+	ints := make([]int, len(cutSample))
+	for i, v := range cutSample {
+		ints[i] = int(v * 32767.0)
+	}
+
+	buf := &audio.IntBuffer{
+		Data:           ints,
+		Format:         &audio.Format{NumChannels: 1, SampleRate: SAMPLE_RATE},
+		SourceBitDepth: 16,
+	}
+
+	if err := enc.Write(buf); err != nil {
+		log.Fatal(err)
+	}
+
+	enc.Close()
+	fmt.Println("Successfully edited the audio")
+}
+
 func main() {
 	var filePath string = getFilePath("./Audio/sample.mp3")
-	var startTime int = 10
-	var endTime int = 70
-	samples := DecodeAudio(filePath, startTime, endTime)
+	var outPutFile string = getFilePath("./Output/output.wav")
 
-	fmt.Println(len(samples))
+	var startTime int = 175
+	var endTime int = 180
+	var samples []float64 = DecodeAudio(filePath, startTime, endTime)
+
+	WriteWavFile(outPutFile, samples)
+
 }

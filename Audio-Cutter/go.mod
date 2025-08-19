@@ -4,6 +4,9 @@ go 1.24.3
 
 require (
 	github.com/faiface/beep v1.1.0 // indirect
+	github.com/go-audio/audio v1.0.0 // indirect
+	github.com/go-audio/riff v1.0.0 // indirect
+	github.com/go-audio/wav v1.1.0 // indirect
 	github.com/hajimehoshi/go-mp3 v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 )
