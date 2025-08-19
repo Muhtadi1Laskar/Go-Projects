@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/faiface/beep/mp3"
 	"github.com/go-audio/audio"
@@ -18,6 +19,14 @@ func getFilePath(folderName string) string {
 	_, filename, _, _ := runtime.Caller(0)
 	dir := filepath.Dir(filename)
 	return filepath.Join(dir, folderName)
+}
+
+func timeStringToSecond(timeStr string) (int, error) {
+	t, err := time.Parse("15:04:05", timeStr)
+	if err != nil {
+		return 0, err
+	}
+	return t.Hour() * 3600 + t.Minute() * 60 + t.Second(), nil
 }
 
 func DecodeAudio(filepath string, start, end int) []float64 {
@@ -83,9 +92,19 @@ func WriteWavFile(outPath string, cutSample []float64) {
 func main() {
 	var filePath string = getFilePath("./Audio/sample.mp3")
 	var outPutFile string = getFilePath("./Output/output.wav")
+	var startTimeStr string = "00:01:37"
+	var endTimeStr string = "00:02:04"
 
-	var startTime int = 175
-	var endTime int = 180
+	startTime, err := timeStringToSecond(startTimeStr)
+	if err != nil {
+		log.Fatal("Invalid start time: ", err)
+	}
+
+	endTime, err := timeStringToSecond(endTimeStr)
+	if err != nil {
+		log.Fatal("Invalid end time: ", err)
+	}
+
 	var samples []float64 = DecodeAudio(filePath, startTime, endTime)
 
 	WriteWavFile(outPutFile, samples)
