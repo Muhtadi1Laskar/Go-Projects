@@ -29,7 +29,7 @@ func timeStringToSecond(timeStr string) (int, error) {
 	return t.Hour() * 3600 + t.Minute() * 60 + t.Second(), nil
 }
 
-func DecodeAudio(filepath string, start, end int) []float64 {
+func DecodeAudioAndCutSample(filepath string, start, end int) []float64 {
 	if start > end {
 		log.Fatal("Start cannot be greater than the End")
 	}
@@ -105,8 +105,7 @@ func main() {
 		log.Fatal("Invalid end time: ", err)
 	}
 
-	var samples []float64 = DecodeAudio(filePath, startTime, endTime)
+	var samples []float64 = DecodeAudioAndCutSample(filePath, startTime, endTime)
 
 	WriteWavFile(outPutFile, samples)
-
 }
