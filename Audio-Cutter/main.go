@@ -16,11 +16,16 @@ func getFilePath(folderName string) string {
 	return filepath.Join(dir, folderName)
 }
 
-func EncodeAudio(filepath string, start, end int) []float64 {
-	f, err := os.Open(filepath)
+func readAudioFile(filePath string) *os.File {
+	f, err := os.Open(filePath)
 	if err != nil {
 		log.Fatal(err)
 	}
+	return f
+}
+
+func EncodeAudio(filepath string, start, end int) []float64 {
+	f := readAudioFile(filepath)
 	defer f.Close()
 
 	streamer, _, err := mp3.Decode(f)
