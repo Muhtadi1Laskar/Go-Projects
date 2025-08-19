@@ -24,7 +24,7 @@ func readAudioFile(filePath string) *os.File {
 	return f
 }
 
-func EncodeAudio(filepath string, start, end int) []float64 {
+func DecodeAudio(filepath string, start, end int) []float64 {
 	f := readAudioFile(filepath)
 	defer f.Close()
 
@@ -55,7 +55,7 @@ func main() {
 	var filePath string = getFilePath("./Audio/sample.mp3")
 	var startTime int = 10
 	var endTime int = 70
-	samples := EncodeAudio(filePath, startTime, endTime)
+	samples := DecodeAudio(filePath, startTime, endTime)
 
 	fmt.Println(len(samples))
 }
