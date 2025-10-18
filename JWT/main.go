@@ -5,7 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
-	// "errors"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -13,7 +13,7 @@ import (
 
 const (
 	JWT_SECRET = "This_is_a_secret_KEY"
-	ALGORTIHM = "HS256"
+	ALGORTIHM  = "HS256"
 )
 
 func base64urlEncode(data []byte) string {
@@ -24,7 +24,7 @@ func base64urlEncode(data []byte) string {
 func base64urlDecode(data string) ([]byte, error) {
 	padding := len(data) % 4
 	if padding > 0 {
-		data += strings.Repeat("=", 4 - padding)
+		data += strings.Repeat("=", 4-padding)
 	}
 	return base64.URLEncoding.DecodeString(data)
 }
@@ -53,10 +53,43 @@ func createJWT(payload map[string]interface{}, secret string) (string, error) {
 	signature := signToken(tokenParts, secret)
 
 	return fmt.Sprintf("%s.%s", tokenParts, signature), nil
-
 }
 
+func verifyJWT(token, secret string) (map[string]interface{}, error) {
+	parts := strings.Split(token, ".")
+	if len(parts) != 3 {
+		return nil, errors.New("invalid token format")
+	}
 
+	encodedHeader := parts[0]
+	encodedPayload := parts[1]
+	signature := parts[2]
+
+	tokenParts := fmt.Sprintf("%s.%s", encodedHeader, encodedPayload)
+	expectedSig := signToken(tokenParts, secret)
+
+	if !hmac.Equal([]byte(signature), []byte(expectedSig)) {
+		return nil, errors.New("signature verification failed")
+	}
+
+	payloadBytes, err := base64urlDecode(encodedPayload)
+	if err != nil {
+		return nil, err
+	}
+
+	var payload map[string]any
+	if err := json.Unmarshal(payloadBytes, &payload); err != nil {
+		return nil, err
+	}
+
+	if exp, ok := payload["exp"].(float64); ok {
+		if time.Now().Unix() > int64(exp) {
+			return nil, errors.New("token expired")
+		}
+	}
+
+	return payload, nil
+}
 
 func main() {
 	data := map[string]interface{}{
@@ -66,5 +99,15 @@ func main() {
 	}
 
 	token, _ := createJWT(data, JWT_SECRET)
-	fmt.Println(token)
+	fmt.Println(token + "\n")
+
+	payload, err := verifyJWT(token, JWT_SECRET)
+	if err != nil {
+		fmt.Println("Error verifying token: ", err)
+		return
+	}
+
+	for key, value := range payload {
+		fmt.Println(key, value)
+	}
 }
