@@ -21,6 +21,15 @@ func base64urlEncode(data []byte) string {
 	return strings.TrimRight(str, "=")
 }
 
+func base64urlDecode(data string) ([]byte, error) {
+	padding := len(data) % 4
+	if padding > 0 {
+		data += strings.Repeat("=", 4 - padding)
+	}
+	return base64.URLEncoding.DecodeString(data)
+}
+
+
 
 func main() {
 	fmt.Println("Hello World")
