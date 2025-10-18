@@ -29,6 +29,12 @@ func base64urlDecode(data string) ([]byte, error) {
 	return base64.URLEncoding.DecodeString(data)
 }
 
+func signToken(message, secret string) string {
+	h := hmac.New(sha256.New, []byte(secret))
+	h.Write([]byte(message))
+	return base64urlEncode(h.Sum(nil))
+}
+
 
 
 func main() {
