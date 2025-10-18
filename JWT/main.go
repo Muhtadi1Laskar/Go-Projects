@@ -5,7 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
+	// "errors"
 	"fmt"
 	"strings"
 	"time"
@@ -35,8 +35,36 @@ func signToken(message, secret string) string {
 	return base64urlEncode(h.Sum(nil))
 }
 
+func createJWT(payload map[string]interface{}, secret string) (string, error) {
+	header := map[string]string{
+		"alg": ALGORTIHM,
+		"typ": "JWT",
+	}
+
+	payload["exp"] = time.Now().Unix() + 36000
+
+	headerJSON, _ := json.Marshal(header)
+	payloadJSON, _ := json.Marshal(payload)
+
+	encodedHeader := base64urlEncode(headerJSON)
+	encodedPayload := base64urlEncode(payloadJSON)
+
+	tokenParts := fmt.Sprintf("%s.%s", encodedHeader, encodedPayload)
+	signature := signToken(tokenParts, secret)
+
+	return fmt.Sprintf("%s.%s", tokenParts, signature), nil
+
+}
+
 
 
 func main() {
-	fmt.Println("Hello World")
+	data := map[string]interface{}{
+		"name":       "Luffy",
+		"id":         42343543405,
+		"occupation": "Pirate",
+	}
+
+	token, _ := createJWT(data, JWT_SECRET)
+	fmt.Println(token)
 }
