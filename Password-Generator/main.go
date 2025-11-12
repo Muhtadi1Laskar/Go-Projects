@@ -22,7 +22,7 @@ func generatePassword(length int, types []string) string {
 		return "Password must be greater than 4"
 	}
 
-	var result []string = make([]string, length)
+	var result []string
 	for i := range types {
 		c := PASSWORD_TYPES[types[i]]
 		if len(c) == 0 {
@@ -44,7 +44,7 @@ func generatePassword(length int, types []string) string {
 }
 
 func main() {
-	var types []string = []string{"lower", "digits", "upper"}
+	var types []string = []string{"lower", "digits", "upper", "symbols"}
 
-	fmt.Println(generatePassword(10, types))
+	fmt.Println(generatePassword(16, types))
 }
