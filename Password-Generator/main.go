@@ -7,9 +7,9 @@ import (
 )
 
 var PASSWORD_TYPES = map[string]string{
-	"lower": "abcdefghijklmnopqrstuvwxyz",
-	"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-	"digits": "0123456789",
+	"lower":   "abcdefghijklmnopqrstuvwxyz",
+	"upper":   "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+	"digits":  "0123456789",
 	"symbols": "!@#$%^&*()-_=+[]{}|;:,.<>?/",
 }
 
@@ -40,7 +40,7 @@ func generatePassword(length int, types []string) string {
 		result = append(result, getRandomChar(charPool))
 	}
 
-	for i := len(result)-1; i > 0; i-- {
+	for i := len(result) - 1; i > 0; i-- {
 		j := rand.Intn(i + 1)
 		result[i], result[j] = result[j], result[i]
 	}
