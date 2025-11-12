@@ -50,6 +50,6 @@ func generatePassword(length int, types []string) string {
 
 func main() {
 	var types []string = []string{"lower", "digits", "upper", "symbols"}
-
-	fmt.Println(generatePassword(16, types))
+	
+	fmt.Println(generatePassword(10, types))
 }
