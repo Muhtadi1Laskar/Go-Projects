@@ -13,6 +13,7 @@ var PASSWORD_TYPES = map[string]string{
 	"symbols": "!@#$%^&*()-_=+[]{}|;:,.<>?/",
 }
 
+
 func getRandomChar(chars string) string {
 	return string(chars[rand.Intn(len(chars))])
 }
