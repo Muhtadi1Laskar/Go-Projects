@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"math/rand"
 	"strings"
 )
@@ -48,8 +48,8 @@ func generatePassword(length int, types []string) string {
 	return strings.Join(result, "")
 }
 
-func main() {
-	var types []string = []string{"lower", "digits", "upper", "symbols"}
+// func main() {
+// 	var types []string = []string{"lower", "digits", "upper", "symbols"}
 
-	fmt.Println(generatePassword(10, types))
-}
+// 	fmt.Println(generatePassword(10, types))
+// }
