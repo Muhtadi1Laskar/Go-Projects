@@ -22,7 +22,6 @@ func generatePassword(length int, types []string) string {
 		return "Password must be greater than 4"
 	}
 
-	
 	var result []string
 	for i := range types {
 		c := PASSWORD_TYPES[types[i]]
