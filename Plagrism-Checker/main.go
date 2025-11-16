@@ -74,7 +74,7 @@ func cosineSimilaritys(vector1, vector2 []float64) float64 {
 }
 
 // preprocessText preprocesses the text (lowercase, remove punctuation, tokenize)
-func preprocessText(text string) []string {
+func PreprocessText(text string) []string {
 	// Convert to lowercase
 	text = strings.ToLower(text)
 	text = removeStopWord(text)
@@ -88,7 +88,7 @@ func preprocessText(text string) []string {
 }
 
 // createFrequencyMap creates a frequency map of words
-func createFrequencyMap(words []string) map[string]int {
+func CreateFrequencyMap(words []string) map[string]int {
 	freqMap := make(map[string]int)
 	for _, word := range words {
 		freqMap[word]++
@@ -97,7 +97,7 @@ func createFrequencyMap(words []string) map[string]int {
 }
 
 // getAllWords gets all unique words from both frequency maps
-func getAllWords(freqMap1, freqMap2 map[string]int) []string {
+func GetAllWords(freqMap1, freqMap2 map[string]int) []string {
 	allWords := make(map[string]bool)
 	for word := range freqMap1 {
 		allWords[word] = true
@@ -115,7 +115,7 @@ func getAllWords(freqMap1, freqMap2 map[string]int) []string {
 }
 
 // createVector creates a vector for a given frequency map
-func createVector(allWords []string, freqMap map[string]int) []float64 {
+func CreateVector(allWords []string, freqMap map[string]int) []float64 {
 	vector := make([]float64, len(allWords))
 	for i, word := range allWords {
 		vector[i] = float64(freqMap[word])

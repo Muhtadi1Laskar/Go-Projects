@@ -29,7 +29,7 @@ func calculateTF(words []string) map[string]float64 {
 	return tf
 }
 
-func calculateIDF(corpus [][]string) map[string]float64 {
+func CalculateIDF(corpus [][]string) map[string]float64 {
 	idf := make(map[string]float64)
 	totalDocs := float64(len(corpus))
 
@@ -52,7 +52,7 @@ func calculateIDF(corpus [][]string) map[string]float64 {
 	return idf
 }
 
-func calculateTFIDF(words []string, idf map[string]float64) map[string]float64 {
+func CalculateTFIDF(words []string, idf map[string]float64) map[string]float64 {
 	tf := calculateTF(words)
 	tfidf := make(map[string]float64)
 
@@ -86,7 +86,7 @@ func cosineSimilarity(vec1, vec2 map[string]float64) float64 {
 	return dotProduct / (magnitudeA * magnitudeB)
 }
 
-func readFiles(PATH string) (string, error) {
+func ReadFiles(PATH string) (string, error) {
 	var builder strings.Builder
 
 	file, err := os.Open(PATH)
@@ -115,7 +115,7 @@ var stopWordsSets = map[string]struct{}{
 	"i": {}, "you": {}, "he": {}, "she": {}, "it": {}, "we": {}, "they": {}, "my": {}, "your": {}, "his": {}, "her": {}, "its": {}, "our": {}, "their": {},
 }
 
-func removeStopWords(text string) string {
+func RemoveStopWords(text string) string {
 	formattedText := strings.Fields(strings.ToLower(text))
 	filteredWords := make([]string, 0, len(formattedText))
 
