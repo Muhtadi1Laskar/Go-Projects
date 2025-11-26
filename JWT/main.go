@@ -55,7 +55,6 @@ func createJWT(payload map[string]interface{}, secret string) (string, error) {
 	return fmt.Sprintf("%s.%s", tokenParts, signature), nil
 }
 
-
 func verifyJWT(token, secret string) (map[string]interface{}, error) {
 	parts := strings.Split(token, ".")
 	if len(parts) != 3 {
