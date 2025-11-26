@@ -1,9 +1,9 @@
 package main
 
-import (
-	operations "system-info/operations"
-)
+import "system-info/operations"
+
 
 func main() {
 	operations.MonitorProcesses()
+	operations.StartMonitoring()
 }
