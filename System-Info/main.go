@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
+	operations "system-info/operations"
 )
 
 func main() {
-	fmt.Println("Hello World")
+	operations.MonitorProcesses()
 }
