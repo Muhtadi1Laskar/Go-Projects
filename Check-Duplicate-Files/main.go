@@ -68,7 +68,7 @@ func findDuplicateFiles(root string) (map[[32]byte][]string, error) {
 }
 
 func main() {
-	root := "C:/Users/laska/Videos"
+	root := ""
 
 	dups, err := findDuplicateFiles(root)
 	if err != nil {
