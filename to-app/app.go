@@ -34,7 +34,6 @@ func (list *LinkedList) Append(value string) {
 	list.tail.next = newNode
 	list.tail = newNode
 	list.length++
-	return
 }
 
 func (list *LinkedList) Insert(index int, value string) {
@@ -65,7 +64,6 @@ func (list *LinkedList) Insert(index int, value string) {
 	previousNode.next = newNode
 	newNode.next = currentNode
 	list.length++
-	return
 
 }
 
@@ -93,7 +91,6 @@ func (list *LinkedList) Delete(index int) {
 	nodeToDelete := node.next
 	node.next = nodeToDelete.next
 	list.length--
-	return
 }
 
 func (list *LinkedList) ChangeStatus(index int, status bool) {
