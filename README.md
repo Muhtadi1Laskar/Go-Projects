@@ -1,4 +1,4 @@
-# 🧠 Go Systems & Algorithms Playground
+# 🧠 Go Projects
 
 A single repository containing **multiple Go projects** focused on **computer science fundamentals**, **systems programming**, **cryptography**, **data structures**, and **practical tooling** — all implemented from scratch wherever possible.
 
