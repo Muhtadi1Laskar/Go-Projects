@@ -4,7 +4,7 @@ A single repository containing **multiple Go projects** focused on **computer sc
 
 This repo serves as:
 - A **learning lab** for low-level and core CS concepts  
-- A **portfolio** showcasing real engineering depth in Go  
+- A **portfolio** showcasing real programming depth in Go  
 - A **reference** for clean, minimal, dependency-light implementations  
 
 ---
